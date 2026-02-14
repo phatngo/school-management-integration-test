@@ -1,0 +1,31 @@
+{
+  "name": "pactum-cucumber-boilerplate",
+  "version": "1.0.0",
+  "description": "Boilerplate project to run REST API tests with Cucumber &amp; Pactum",
+  "main": "index.js",
+  "scripts": {
+    "test": "cucumber-js -p default"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pactumjs/pactum-cucumber-boilerplate.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pactumjs/pactum-cucumber-boilerplate/issues"
+  },
+  "homepage": "https://github.com/pactumjs/pactum-cucumber-boilerplate#readme",
+  "dependencies": {
+    "@cucumber/cucumber": "^8.4.0",
+    "config": "^4.3.0",
+    "pactum": "latest"
+  },
+  "devDependencies": {
+    "@types/config": "^3.3.5",
+    "@types/node": "^25.2.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
