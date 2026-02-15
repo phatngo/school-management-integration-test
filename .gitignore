@@ -2,3 +2,4 @@ node_modules/
 .pactum
 .vscode
 .DS_Store
+.env

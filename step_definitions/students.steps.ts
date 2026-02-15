@@ -1,15 +1,23 @@
 import { Given, When, Then, Before, After } from "@cucumber/cucumber";
 import { GetStudentRequest } from "../api/GetStudentRequest";
 import config from "config";
+import { Student } from "../types/api/student.api.schema";
 // import { CustomWorld } from '.;
 
+console.log(config);
 const getStudentRequest = new GetStudentRequest(
-  config.get("publicUsers.user1"),
+  {
+    username: "1",
+    apiKey: "2"
+  }
 );
 
-Given("I get a student information with id {string}", function (id: string) {
-  getStudentRequest.get(id);
-});
+Given(
+  "I get a student information with id {string}",
+  async function (id: string) {
+    const student: Student = await getStudentRequest.get(id);
+  },
+);
 
 // Given('I set path param {string} to {string}', function (this: CustomWorld, key: string, value: string) {
 //   this.spec.withPathParams(key, value);

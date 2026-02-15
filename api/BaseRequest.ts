@@ -1,5 +1,6 @@
 import config from "config";
 import { request, spec } from "pactum";
+import { User } from "../types/api/common.api.schema";
 
 export class BaseRequest<T, U = null> {
   protected url: string;
@@ -19,12 +20,10 @@ export class BaseRequest<T, U = null> {
     method: string,
     extraRequestHeaders: Record<string, string> | null = null,
     requestBody?: U | null,
-    user: {
-      username: string;
-      apiKey: string;
-    } | null = null,
-    url: string = config.get("basePublicUrl"),
+    user: User | null = null,
+    url = "http://localhost:3000",
   ) {
+    // console.log(url);
     this.url = url;
     this.endpoint = endpoint;
     this.method = method;
@@ -34,9 +33,9 @@ export class BaseRequest<T, U = null> {
       this.requestHeaders["Content-Type"] = "application/json";
     }
 
-    if (user) {
-      this.user = { ...user };
-    }
+    // if (user) {
+    //   this.user = { ...user };
+    // }
 
     if (requestBody) {
       this.requestBody = { ...requestBody };
@@ -52,15 +51,20 @@ export class BaseRequest<T, U = null> {
       : null;
   }
 
-  async post() {
-    return await spec().post(this.endpoint).withBody(this.requestBody);
+  async post(): Promise<T> {
+    return await spec()
+      .post(this.endpoint)
+      .withBody(this.requestBody)
+      .returns<T>("res.body");
   }
 
-  async get(id: string) {
-    return await spec().get(this.endpoint.concat(`/${id}`));
+  async get(id: string): Promise<T> {
+    return await spec()
+      .get(this.endpoint.concat(`/${id}`))
+      .returns<T>("res.body");
   }
 
   assertResponseCode(expectedCode: number) {
-    spec().expectStatus(expectedCode);
+    return spec().expectStatus(expectedCode);
   }
 }
