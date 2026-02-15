@@ -21,9 +21,8 @@ export class BaseRequest<T, U = null> {
     extraRequestHeaders: Record<string, string> | null = null,
     requestBody?: U | null,
     user: User | null = null,
-    url = "http://localhost:3000",
+    url: string = config.get("basePublicUrl"),
   ) {
-    // console.log(url);
     this.url = url;
     this.endpoint = endpoint;
     this.method = method;
@@ -33,9 +32,9 @@ export class BaseRequest<T, U = null> {
       this.requestHeaders["Content-Type"] = "application/json";
     }
 
-    // if (user) {
-    //   this.user = { ...user };
-    // }
+    if (user) {
+      this.user = { ...user };
+    }
 
     if (requestBody) {
       this.requestBody = { ...requestBody };

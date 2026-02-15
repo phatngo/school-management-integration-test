@@ -4,18 +4,16 @@ import config from "config";
 import { Student } from "../types/api/student.api.schema";
 // import { CustomWorld } from '.;
 
-console.log(config);
-const getStudentRequest = new GetStudentRequest(
-  {
-    username: "1",
-    apiKey: "2"
-  }
-);
+let student: Student;
 
 Given(
   "I get a student information with id {string}",
   async function (id: string) {
-    const student: Student = await getStudentRequest.get(id);
+    const getStudentRequest = new GetStudentRequest(
+      config.get("publicUsers.user1"),
+    );
+    student = await getStudentRequest.get(id);
+    console.log(student);
   },
 );
 

@@ -4,7 +4,7 @@
   "description": "Boilerplate project to run REST API tests with Cucumber &amp; Pactum",
   "main": "index.js",
   "scripts": {
-    "test": "cucumber-js -p default"
+    "test": "scripts/test.sh"
   },
   "repository": {
     "type": "git",
