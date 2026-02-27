@@ -1,5 +1,7 @@
+import 'dotenv/config'
+
 export default {
-  basePublicUrl: process.env.BASE_PUBLIC_URL || "http://localhost:3000",
+  baseKongUrl: process.env.BASE_KONG_URL || "http://localhost:3000",
   // dbConfig: {
   //   host: process.env.DB_HOST || "",
   //   port: process.env.DB_PORT || "",
