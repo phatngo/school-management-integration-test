@@ -5,17 +5,19 @@ import { expect } from "pactum";
 import { like } from "pactum-matchers";
 import { TeacherRequestBody } from "../types/api/teacher.api.types";
 import { readJSONFile } from "../utils/files.utils";
+import { getAddedTeacherId, getTeacherService, parseDataTable } from "../utils/cucumber.utils";
+import { get } from "node:http";
 
-const teacherResponseSchemaPathDir = "schemas/teacher.schema.json";
+const TEACHER_RESPONSE_SCHEMA = "schemas/teacher.schema.json";
 
 When(
   "I add a new teacher with the following profile:",
   async function (teacherProfile: { rawTable: [][] }) {
-    const data = Object.fromEntries(teacherProfile.rawTable);
+    const data = parseDataTable(teacherProfile.rawTable);
     const payload: TeacherRequestBody = {
-      name: data.name,
+      name: String(data.name),
     };
-    const teacher = new TeacherService(config.get("publicUsers.user1"));
+    const teacher = getTeacherService(config.get("publicUsers.user1"));
     const response = await teacher.post(payload).toss();
 
     return (this.addedTeacher = {
@@ -26,11 +28,9 @@ When(
 );
 
 When("I view the added teacher", async function () {
-  const teacher = new TeacherService(config.get("publicUsers.user1"));
+  const teacher = getTeacherService(config.get("publicUsers.user1"));
 
-  const teacherId = this.addedTeacher
-    ? this.addedTeacher.response.body.data.id
-    : "";
+  const teacherId = getAddedTeacherId(this);
 
   const response = await teacher.get(teacherId).toss();
 
@@ -42,15 +42,13 @@ When("I view the added teacher", async function () {
 When(
   "I modify the added teacher with the following data:",
   async function (teacherProfile: { rawTable: [][] }) {
-    const data = Object.fromEntries(teacherProfile.rawTable);
-    const teacher = new TeacherService(config.get("publicUsers.user1"));
+    const data = parseDataTable(teacherProfile.rawTable);
+    const teacher = getTeacherService(config.get("publicUsers.user1"));
 
-    const teacherId = this.addedTeacher
-      ? this.addedTeacher.response.body.data.id
-      : "";
+    const teacherId = getAddedTeacherId(this);
 
     const payload = {
-      name: data.name,
+      name: String(data.name),
     };
 
     const response = await teacher.put(teacherId, payload).toss();
@@ -65,11 +63,11 @@ When(
 When(
   "I modify the teacher with id: {int} and the following data:",
   async function (teacherId: number, teacherProfile: { rawTable: [][] }) {
-    const data = Object.fromEntries(teacherProfile.rawTable);
-    const teacher = new TeacherService(config.get("publicUsers.user1"));
+    const data = parseDataTable(teacherProfile.rawTable);
+    const teacher = getTeacherService(config.get("publicUsers.user1"));
 
     const payload = {
-      name: data.name,
+      name: String(data.name),
     };
 
     const response = await teacher.put(teacherId, payload).toss();
@@ -82,7 +80,7 @@ When(
 );
 
 When("I view the teacher with id: {int}", async function (teacherId: number) {
-  const teacher = new TeacherService(config.get("publicUsers.user1"));
+  const teacher = getTeacherService(config.get("publicUsers.user1"));
   const response = await teacher.get(teacherId).toss();
 
   return (this.getTeacherResponse = {
@@ -91,7 +89,7 @@ When("I view the teacher with id: {int}", async function (teacherId: number) {
 });
 
 Then("I see the teacher is created successfully", async function () {
-  const teacherResponeSchema = readJSONFile(teacherResponseSchemaPathDir);
+  const teacherResponeSchema = readJSONFile(TEACHER_RESPONSE_SCHEMA);
   // assert response code
   expect(this.addedTeacher.response).to.have.status(201);
 
@@ -111,7 +109,7 @@ Then("I see the teacher is created successfully", async function () {
 Then(
   "I see the fetched teacher data matches the data when created",
   async function () {
-    const teacherResponeSchema = readJSONFile(teacherResponseSchemaPathDir);
+    const teacherResponeSchema = readJSONFile(TEACHER_RESPONSE_SCHEMA);
     // assert response code
     expect(this.getTeacherResponse.response).to.have.status(200);
 
@@ -131,7 +129,7 @@ Then(
 );
 
 Then("I see the teacher is modified successfully", async function () {
-  const teacherResponeSchema = readJSONFile(teacherResponseSchemaPathDir);
+  const teacherResponeSchema = readJSONFile(TEACHER_RESPONSE_SCHEMA);
   // assert response code
   expect(this.modifiedTeacherResponse.response).to.have.status(200);
 
