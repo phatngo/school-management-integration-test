@@ -6,7 +6,12 @@ import { like } from "pactum-matchers";
 import { TeacherRequestBody } from "../types/api/teacher.api.types";
 import { readJSONFile } from "../utils/files.utils";
 import { getAddedTeacherId, getTeacherService, parseDataTable } from "../utils/cucumber.utils";
-import { get } from "node:http";
+import {
+  assertPostSuccess,
+  assertGetSuccess,
+  assertPutSuccess,
+  assertListSuccess,
+} from "../utils/assertion.utils";
 
 const TEACHER_RESPONSE_SCHEMA = "schemas/teacher.schema.json";
 
@@ -89,21 +94,13 @@ When("I view the teacher with id: {int}", async function (teacherId: number) {
 });
 
 Then("I see the teacher is created successfully", async function () {
-  const teacherResponeSchema = readJSONFile(TEACHER_RESPONSE_SCHEMA);
-  // assert response code
-  expect(this.addedTeacher.response).to.have.status(201);
-
-  // assert response body schema
-  expect(this.addedTeacher.response).to.have.jsonSchema(teacherResponeSchema);
-
-  // assert response body
-  expect(this.addedTeacher.response).to.have.jsonMatch({
-    code: "CREATED",
-    data: {
-      id: like(100),
-      name: this.addedTeacher.payload.name,
-    },
-  });
+  assertPostSuccess(
+    this.addedTeacher.payload,
+    this.addedTeacher.response,
+    teacherResponseSchemaPathDir,
+    201,
+    "CREATED",
+  );
 });
 
 Then(
@@ -129,23 +126,13 @@ Then(
 );
 
 Then("I see the teacher is modified successfully", async function () {
-  const teacherResponeSchema = readJSONFile(TEACHER_RESPONSE_SCHEMA);
-  // assert response code
-  expect(this.modifiedTeacherResponse.response).to.have.status(200);
-
-  // assert response body schema
-  expect(this.modifiedTeacherResponse.response).to.have.jsonSchema(
-    teacherResponeSchema,
+  assertPutSuccess(
+    this.modifiedTeacherResponse.payload,
+    this.modifiedTeacherResponse.response,
+    teacherResponseSchemaPathDir,
+    200,
+    "OK",
   );
-
-  // assert response body
-  expect(this.modifiedTeacherResponse.response).to.have.jsonMatch({
-    code: "OK",
-    data: {
-      id: this.addedTeacher.response.body.data.id,
-      name: this.modifiedTeacherResponse.payload.name,
-    },
-  });
 });
 
 Then(
