@@ -2,21 +2,21 @@ import { expect } from "pactum";
 import { readJSONFile } from "./files.utils";
 import { like } from "pactum-matchers";
 
+const ERROR_RESPONSE_SCHEMA_PATH = "schemas/error.api.response.schema.json";
+
 /**
  * Assert POST request was successful
  * Validates status, schema, code, and compares payload with response data
  */
-export function assertPostSuccess<T>(
+export function assertPostSuccess<T, U>(
   requestPayload: T,
-  response: any,
+  response: U,
   schemaPath: string,
   expectedStatus: number = 201,
   expectedCode: string = "CREATED",
 ) {
-  const schema = readJSONFile(schemaPath);
-  expect(response).to.have.status(expectedStatus);
-  expect(response).to.have.jsonSchema(schema);
-  expect(response).to.have.jsonMatch({
+  assertCommon(schemaPath, response, expectedStatus);
+  return expect(response).to.have.jsonMatch({
     code: expectedCode,
     data: {
       ...requestPayload,
@@ -29,19 +29,17 @@ export function assertPostSuccess<T>(
  * Assert GET request was successful
  * Validates status, schema, code, and compares stored payload with response data
  */
-export function assertGetSuccess<T>(
+export function assertGetSuccess<T, U>(
   storedPayload: T,
-  response: any,
+  response: U,
   schemaPath: string,
   expectedStatus: number = 200,
   expectedCode: string = "OK",
 ) {
-  const schema = readJSONFile(schemaPath);
-  expect(response).to.have.status(expectedStatus);
-  expect(response).to.have.jsonSchema(schema);
-  expect(response).to.have.jsonMatch({
+  assertCommon(schemaPath, response, expectedStatus);
+  return expect(response).to.have.jsonMatch({
     code: expectedCode,
-    data: storedPayload,
+    data: { ...storedPayload, id: like(100) },
   });
 }
 
@@ -49,19 +47,17 @@ export function assertGetSuccess<T>(
  * Assert PUT request was successful
  * Validates status, schema, code, and compares payload with response data
  */
-export function assertPutSuccess<T>(
+export function assertPutSuccess<T, U>(
   requestPayload: T,
-  response: any,
+  response: U,
   schemaPath: string,
   expectedStatus: number = 200,
   expectedCode: string = "OK",
 ) {
-  const schema = readJSONFile(schemaPath);
-  expect(response).to.have.status(expectedStatus);
-  expect(response).to.have.jsonSchema(schema);
-  expect(response).to.have.jsonMatch({
+  assertCommon(schemaPath, response, expectedStatus);
+  return expect(response).to.have.jsonMatch({
     code: expectedCode,
-    data: requestPayload,
+    data: { ...requestPayload, id: like(100) },
   });
 }
 
@@ -69,11 +65,11 @@ export function assertPutSuccess<T>(
  * Assert DELETE request was successful
  * Validates status code (typically 204 No Content or 200 OK)
  */
-export function assertDeleteSuccess(
-  response: any,
+export function assertDeleteSuccess<U>(
+  response: U,
   expectedStatus: number = 204,
 ) {
-  expect(response).to.have.status(expectedStatus);
+  return expect(response).to.have.status(expectedStatus);
 }
 
 /**
@@ -89,35 +85,30 @@ export function assertListSuccess(
   const schema = readJSONFile(schemaPath);
   expect(response).to.have.status(expectedStatus);
   expect(response).to.have.jsonSchema(schema);
-  expect(response).to.have.jsonMatch({
+  return expect(response).to.have.jsonMatch({
     code: expectedCode,
   });
-  // expect(response.json().data).to.be.array();
 }
 
-/**
- * Assert successful response with optional payload comparison
- * Generic function for flexible use cases
- */
-export function assertResponse(
-  response: any,
-  schemaPath: string,
+export function assertErrorResponse<U>(
+  response: U,
   expectedStatus: number,
   expectedCode: string,
-  comparePayload?: any,
+  expectedErrorMessage: string,
 ) {
-  const schema = readJSONFile(schemaPath);
+  assertCommon(ERROR_RESPONSE_SCHEMA_PATH, response, expectedStatus);
+  return expect(response).to.have.jsonMatch({
+    code: expectedCode,
+    error: expectedErrorMessage,
+  });
+}
+
+export function assertCommon<T>(
+  responseSchemaPath: string,
+  response: T,
+  expectedStatus: number,
+) {
+  const schema = readJSONFile(responseSchemaPath);
   expect(response).to.have.status(expectedStatus);
   expect(response).to.have.jsonSchema(schema);
-
-  if (comparePayload) {
-    expect(response).to.have.jsonMatch({
-      code: expectedCode,
-      data: comparePayload,
-    });
-  } else {
-    expect(response).to.have.jsonMatch({
-      code: expectedCode,
-    });
-  }
 }
