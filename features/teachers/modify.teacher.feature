@@ -17,3 +17,8 @@ Feature: View a single teacher
     Examples:
       | id |
       | -1 |
+
+  Scenario: Failed to modify a teacher with an empty name
+    When I modify the added teacher with the following data:
+      | name | <empty> |
+    Then I fail to modify the teacher as name cannot be empty

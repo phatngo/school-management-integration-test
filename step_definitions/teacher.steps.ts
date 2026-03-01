@@ -143,3 +143,27 @@ Then(
     );
   },
 );
+
+Then(
+  "I fail to modify the teacher as name cannot be empty",
+  async function () {
+    return assertErrorResponse(
+      this.modifiedTeacherResponse.response,
+      HTTP_STATUS.BAD_REQUEST,
+      RESPONSE_CODE.BAD_REQUEST,
+      `name should not be empty!`,
+    );
+  },
+);
+
+Then(
+  "I fail to add the teacher as name cannot be empty",
+  async function () {
+    return assertErrorResponse(
+      this.addedTeacher.response,
+      HTTP_STATUS.BAD_REQUEST,
+      RESPONSE_CODE.BAD_REQUEST,
+      `name should not be empty!`,
+    );
+  },
+);

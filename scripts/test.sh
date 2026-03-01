@@ -1,1 +1,1 @@
-node_modules/.bin/cucumber-js -p default --publish
+node_modules/.bin/cucumber-js -p default
