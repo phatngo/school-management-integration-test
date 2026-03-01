@@ -10,6 +10,7 @@ import {
   assertGetSuccess,
   assertPutSuccess,
   assertErrorResponse,
+  assertDeleteSuccess,
 } from "../utils/api.response.assertion.utils";
 import { HTTP_STATUS, RESPONSE_CODE } from "../constants/http.constants";
 
@@ -93,6 +94,16 @@ When("I view the teacher with id: {int}", async function (teacherId: number) {
   });
 });
 
+When("I delete the added teacher", async function () {
+  const teacher = getTeacherService("publicUsers.user1");
+  const teacherId = getAddedTeacherId(this);
+  const response = await teacher.delete(teacherId).toss();
+
+  return (this.deleteTeacherResponse = {
+    response,
+  });
+});
+
 Then("I see the teacher is created successfully", async function () {
   return assertPostSuccess(
     this.addedTeacher.payload,
@@ -120,6 +131,10 @@ Then("I see the teacher is modified successfully", async function () {
   );
 });
 
+Then("I see the teacher is deleted successfully", async function () {
+  return assertDeleteSuccess(this.deleteTeacherResponse.response);
+});
+
 Then(
   "I fail to view the teacher as the teacher with {int} is not found",
   async function (id: number) {
@@ -144,26 +159,42 @@ Then(
   },
 );
 
-Then(
-  "I fail to modify the teacher as name cannot be empty",
-  async function () {
-    return assertErrorResponse(
-      this.modifiedTeacherResponse.response,
-      HTTP_STATUS.BAD_REQUEST,
-      RESPONSE_CODE.BAD_REQUEST,
-      `name should not be empty!`,
-    );
-  },
-);
+Then("I fail to modify the teacher as name cannot be empty", async function () {
+  return assertErrorResponse(
+    this.modifiedTeacherResponse.response,
+    HTTP_STATUS.BAD_REQUEST,
+    RESPONSE_CODE.BAD_REQUEST,
+    `name should not be empty!`,
+  );
+});
+
+Then("I fail to add the teacher as name cannot be empty", async function () {
+  return assertErrorResponse(
+    this.addedTeacher.response,
+    HTTP_STATUS.BAD_REQUEST,
+    RESPONSE_CODE.BAD_REQUEST,
+    `name should not be empty!`,
+  );
+});
+
+When("I delete the teacher with id: {int}", async function (id: number) {
+  const teacher = getTeacherService("publicUsers.user1");
+
+  const response = await teacher.delete(id).toss();
+
+  return (this.deleteTeacherResponse = {
+    response,
+  });
+});
 
 Then(
-  "I fail to add the teacher as name cannot be empty",
-  async function () {
+  "I fail to delete the teacher as the teacher with {int} is not found",
+  async function (id: number) {
     return assertErrorResponse(
-      this.addedTeacher.response,
-      HTTP_STATUS.BAD_REQUEST,
-      RESPONSE_CODE.BAD_REQUEST,
-      `name should not be empty!`,
+      this.deleteTeacherResponse.response,
+      HTTP_STATUS.NOT_FOUND,
+      RESPONSE_CODE.NOT_FOUND,
+      `teacher with id: ${id} is not found`,
     );
   },
 );

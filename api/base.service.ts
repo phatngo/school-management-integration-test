@@ -46,9 +46,7 @@ export class BaseService<T, U = null> {
 
   put(id: number, body: U): Spec {
     const path = id ? `${this.endpoint}/${id}` : this.endpoint;
-    return this.createSpec()
-      .put(`${this.baseUrl}${path}`)
-      .withBody(body);
+    return this.createSpec().put(`${this.baseUrl}${path}`).withBody(body);
   }
 
   get(id?: number): Spec {
@@ -70,10 +68,8 @@ export class BaseService<T, U = null> {
       .returns("res.body");
   }
 
-  async delete(id: number): Promise<Response<T>> {
-    const path = id ? `/${this.endpoint}/${id}` : this.endpoint;
-    return await this.createSpec()
-      .delete(`${this.baseUrl}${path}`)
-      .returns("res.body");
+  delete(id: number): Spec {
+    const path = id ? `${this.endpoint}/${id}` : this.endpoint;
+    return this.createSpec().delete(`${this.baseUrl}${path}`);
   }
 }
