@@ -7,13 +7,15 @@ export class CustomWorld extends World {
 
   constructor(options: IWorldOptions) {
     super(options);
-    this.currentUser = config.get<Record<string, string>>(UserConfigPaths.DEFAULT_USER);
+    this.currentUser = config.get<Record<string, string>>(
+      UserConfigPaths.DEFAULT_USER,
+    );
   }
 
-  chooseUser(userConfigPath: string) {
-    const userConfig = config.get<Record<string, string>>(userConfigPath);
+  chooseUser(user: string) {
+    const userConfig = config.get<Record<string, string>>(`users.${user}`);
     if (!userConfig) {
-      throw new Error(`User "${userConfigPath}" is not defined in the configuration.`);
+      throw new Error(`User "${user}" is not defined in the configuration.`);
     }
     this.currentUser = userConfig;
   }

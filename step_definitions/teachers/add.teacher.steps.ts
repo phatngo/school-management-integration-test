@@ -19,6 +19,7 @@ When(
     const payload: TeacherRequestBody = {
       name: String(data.name),
     };
+    console.log('@@@@@', this.currentUser);
     const teacher = getTeacherService(this.currentUser);
     const response = await teacher.post(payload);
 

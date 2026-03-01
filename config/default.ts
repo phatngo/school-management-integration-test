@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import "dotenv/config";
 
 export default {
   baseKongUrl: process.env.BASE_KONG_URL || "http://localhost:3000",
@@ -13,6 +13,10 @@ export default {
     default: {
       username: process.env.PUBLIC_USER_USERNAME || "",
       apiKey: process.env.PUBLIC_USER_API_KEY || "",
+    },
+    adminUser: {
+      username: process.env.ADMIN_USER_USERNAME || "",
+      apiKey: process.env.ADMIN_USER_API_KEY || "",
     },
   },
 };
