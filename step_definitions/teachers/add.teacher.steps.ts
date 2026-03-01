@@ -1,4 +1,5 @@
 import { When, Then } from "@cucumber/cucumber";
+import { TEACHER_RESPONSE_SCHEMA_PATH } from "../../constants/api.constants";
 import { TeacherRequestBody } from "../../types/api/teacher.api.types";
 import {
   getTeacherService,
@@ -10,7 +11,6 @@ import {
 } from "../../utils/api.response.assertion.utils";
 import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/http.constants";
 
-const TEACHER_RESPONSE_SCHEMA_PATH = "schemas/teachers.api.response.schema.json";
 
 When(
   "I add a new teacher with the following profile:",
@@ -19,7 +19,6 @@ When(
     const payload: TeacherRequestBody = {
       name: String(data.name),
     };
-    console.log('@@@@@', this.currentUser);
     const teacher = getTeacherService(this.currentUser);
     const response = await teacher.post(payload);
 

@@ -1,4 +1,5 @@
 import { When, Then } from "@cucumber/cucumber";
+import { TEACHER_RESPONSE_SCHEMA_PATH } from "../../constants/api.constants";
 import {
   getAddedTeacherId,
   getTeacherService,
@@ -10,7 +11,6 @@ import {
 } from "../../utils/api.response.assertion.utils";
 import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/http.constants";
 
-const TEACHER_RESPONSE_SCHEMA_PATH = "schemas/teachers.api.response.schema.json";
 
 When(
   "I modify the added teacher with the following data:",
