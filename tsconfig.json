@@ -8,5 +8,5 @@
     "outDir": "dist",
     "rootDir": "."
   },
-  "include": ["features/**/*.ts", "config/*.ts"]
+  "include": ["features/**/*.ts", "config/*.ts", "step_definitions/hooks.ts", "step_definitions/world.ts"]
 }

@@ -23,10 +23,11 @@ function convertDataTableValue(value: string): string | number | boolean {
   return value;
 }
 
-export function getTeacherService(
-  userKey: string = "publicUsers.user1",
-): TeacherService {
-  return new TeacherService(config.get(userKey));
+export function getTeacherService(currentUser: {
+  username: string;
+  apiKey: string;
+}): TeacherService {
+  return new TeacherService(currentUser);
 }
 
 export function getAddedTeacherId(world: any): number {

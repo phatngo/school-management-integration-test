@@ -10,7 +10,7 @@ import {
 import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/http.constants";
 
 When("I delete the added teacher", async function () {
-  const teacher = getTeacherService("publicUsers.user1");
+  const teacher = getTeacherService(this.currentUser);
   const teacherId = getAddedTeacherId(this);
   const response = await teacher.delete(teacherId).toss();
 
@@ -20,7 +20,7 @@ When("I delete the added teacher", async function () {
 });
 
 When("I delete the teacher with id: {int}", async function (id: number) {
-  const teacher = getTeacherService("publicUsers.user1");
+  const teacher = getTeacherService(this.currentUser);
 
   const response = await teacher.delete(id).toss();
 

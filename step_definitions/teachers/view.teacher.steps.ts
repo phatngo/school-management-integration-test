@@ -12,7 +12,7 @@ import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/http.constants";
 const TEACHER_RESPONSE_SCHEMA_PATH = "schemas/teachers.api.response.schema.json";
 
 When("I view the added teacher", async function () {
-  const teacher = getTeacherService("publicUsers.user1");
+  const teacher = getTeacherService(this.currentUser);
 
   const teacherId = getAddedTeacherId(this);
 
@@ -24,7 +24,7 @@ When("I view the added teacher", async function () {
 });
 
 When("I view the teacher with id: {int}", async function (teacherId: number) {
-  const teacher = getTeacherService("publicUsers.user1");
+  const teacher = getTeacherService(this.currentUser);
   const response = await teacher.get(teacherId).toss();
 
   return (this.getTeacherResponse = {

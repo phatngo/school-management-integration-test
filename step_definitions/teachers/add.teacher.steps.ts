@@ -19,7 +19,7 @@ When(
     const payload: TeacherRequestBody = {
       name: String(data.name),
     };
-    const teacher = getTeacherService("publicUsers.user1");
+    const teacher = getTeacherService(this.currentUser);
     const response = await teacher.post(payload);
 
     return (this.addedTeacher = {

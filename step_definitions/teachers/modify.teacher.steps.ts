@@ -16,7 +16,7 @@ When(
   "I modify the added teacher with the following data:",
   async function (teacherProfile: { rawTable: [][] }) {
     const data = parseDataTable(teacherProfile.rawTable);
-    const teacher = getTeacherService("publicUsers.user1");
+    const teacher = getTeacherService(this.currentUser);
 
     const teacherId = getAddedTeacherId(this);
 
@@ -37,7 +37,7 @@ When(
   "I modify the teacher with id: {int} and the following data:",
   async function (teacherId: number, teacherProfile: { rawTable: [][] }) {
     const data = parseDataTable(teacherProfile.rawTable);
-    const teacher = getTeacherService("publicUsers.user1");
+    const teacher = getTeacherService(this.currentUser);
 
     const payload = {
       name: String(data.name),

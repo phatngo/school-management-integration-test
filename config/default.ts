@@ -9,8 +9,8 @@ export default {
   //   dbUsername: process.env.DB_USERNAME || "",
   //   dbPassword: process.env.DB_PASSWORD || ""
   // },
-  publicUsers: {
-    user1: {
+  users: {
+    default: {
       username: process.env.PUBLIC_USER_USERNAME || "",
       apiKey: process.env.PUBLIC_USER_API_KEY || "",
     },
