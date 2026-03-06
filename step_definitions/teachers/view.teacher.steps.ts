@@ -8,11 +8,12 @@ import {
   assertGetSuccess,
   assertErrorResponse,
 } from "../../utils/api.response.assertion.utils";
-import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/http.constants";
+import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
+import { TeacherService } from "../../api/teacher.service";
 
 
 When("I view the added teacher", async function () {
-  const teacher = getTeacherService(this.currentUser);
+  const teacher = new TeacherService(this.currentUser);
 
   const teacherId = getAddedTeacherId(this);
 
@@ -24,7 +25,7 @@ When("I view the added teacher", async function () {
 });
 
 When("I view the teacher with id: {int}", async function (teacherId: number) {
-  const teacher = getTeacherService(this.currentUser);
+  const teacher = new TeacherService(this.currentUser);
   const response = await teacher.get(teacherId).toss();
 
   return (this.getTeacherResponse = {

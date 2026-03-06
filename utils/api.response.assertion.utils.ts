@@ -1,6 +1,7 @@
 import { expect } from "pactum";
 import { readJSONFile } from "./files.utils";
 import { like } from "pactum-matchers";
+import { HTTP_STATUS, RESPONSE_CODE } from "../constants/api.constants";
 
 const ERROR_RESPONSE_SCHEMA_PATH = "schemas/error.api.response.schema.json";
 
@@ -12,8 +13,8 @@ export function assertPostSuccess<T, U>(
   requestPayload: T,
   response: U,
   schemaPath: string,
-  expectedStatus: number = 201,
-  expectedCode: string = "CREATED",
+  expectedStatus: number = HTTP_STATUS.CREATED,
+  expectedCode: string = RESPONSE_CODE.CREATED,
 ) {
   assertCommon(schemaPath, response, expectedStatus);
   return expect(response).to.have.jsonMatch({
@@ -33,8 +34,8 @@ export function assertGetSuccess<T, U>(
   storedPayload: T,
   response: U,
   schemaPath: string,
-  expectedStatus: number = 200,
-  expectedCode: string = "OK",
+  expectedStatus: number = HTTP_STATUS.OK,
+  expectedCode: string = RESPONSE_CODE.OK,
 ) {
   assertCommon(schemaPath, response, expectedStatus);
   return expect(response).to.have.jsonMatch({
@@ -51,8 +52,8 @@ export function assertPutSuccess<T, U>(
   requestPayload: T,
   response: U,
   schemaPath: string,
-  expectedStatus: number = 200,
-  expectedCode: string = "OK",
+  expectedStatus: number = HTTP_STATUS.OK,
+  expectedCode: string = RESPONSE_CODE.OK,
 ) {
   assertCommon(schemaPath, response, expectedStatus);
   return expect(response).to.have.jsonMatch({
@@ -67,7 +68,7 @@ export function assertPutSuccess<T, U>(
  */
 export function assertDeleteSuccess<U>(
   response: U,
-  expectedStatus: number = 204,
+  expectedStatus: number = HTTP_STATUS.NO_CONTENT,
 ) {
   return expect(response).to.have.status(expectedStatus);
 }
@@ -79,8 +80,8 @@ export function assertDeleteSuccess<U>(
 export function assertListSuccess(
   response: any,
   schemaPath: string,
-  expectedStatus: number = 200,
-  expectedCode: string = "OK",
+  expectedStatus: number = HTTP_STATUS.OK,
+  expectedCode: string = RESPONSE_CODE.OK,
 ) {
   const schema = readJSONFile(schemaPath);
   expect(response).to.have.status(expectedStatus);

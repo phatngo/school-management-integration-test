@@ -7,12 +7,13 @@ import {
   assertDeleteSuccess,
   assertErrorResponse,
 } from "../../utils/api.response.assertion.utils";
-import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/http.constants";
+import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
+import { TeacherService } from "../../api/teacher.service";
 
 When("I delete the added teacher", async function () {
-  const teacher = getTeacherService(this.currentUser);
+  const teacher = new TeacherService(this.currentUser);
   const teacherId = getAddedTeacherId(this);
-  const response = await teacher.delete(teacherId).toss();
+  const response = await teacher.delete(teacherId);
 
   return (this.deleteTeacherResponse = {
     response,
@@ -20,9 +21,9 @@ When("I delete the added teacher", async function () {
 });
 
 When("I delete the teacher with id: {int}", async function (id: number) {
-  const teacher = getTeacherService(this.currentUser);
+  const teacher = new TeacherService(this.currentUser);
 
-  const response = await teacher.delete(id).toss();
+  const response = await teacher.delete(id);
 
   return (this.deleteTeacherResponse = {
     response,

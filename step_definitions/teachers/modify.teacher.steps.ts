@@ -9,14 +9,14 @@ import {
   assertPutSuccess,
   assertErrorResponse,
 } from "../../utils/api.response.assertion.utils";
-import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/http.constants";
-
+import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
+import { TeacherService } from "../../api/teacher.service";
 
 When(
   "I modify the added teacher with the following data:",
   async function (teacherProfile: { rawTable: [][] }) {
     const data = parseDataTable(teacherProfile.rawTable);
-    const teacher = getTeacherService(this.currentUser);
+    const teacher = new TeacherService(this.currentUser);
 
     const teacherId = getAddedTeacherId(this);
 
@@ -37,7 +37,7 @@ When(
   "I modify the teacher with id: {int} and the following data:",
   async function (teacherId: number, teacherProfile: { rawTable: [][] }) {
     const data = parseDataTable(teacherProfile.rawTable);
-    const teacher = getTeacherService(this.currentUser);
+    const teacher = new TeacherService(this.currentUser);
 
     const payload = {
       name: String(data.name),

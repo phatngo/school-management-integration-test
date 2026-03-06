@@ -9,7 +9,9 @@ import {
   assertPostSuccess,
   assertErrorResponse,
 } from "../../utils/api.response.assertion.utils";
-import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/http.constants";
+import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
+import { TeacherService } from "../../api/teacher.service";
+import { TeacherDb } from "../../db/teacher.db";
 
 
 When(
@@ -19,7 +21,7 @@ When(
     const payload: TeacherRequestBody = {
       name: String(data.name),
     };
-    const teacher = getTeacherService(this.currentUser);
+    const teacher = new TeacherService(this.currentUser);
     const response = await teacher.post(payload);
 
     return (this.addedTeacher = {
@@ -30,6 +32,8 @@ When(
 );
 
 Then("I see the teacher is created successfully", async function () {
+  const log = await new TeacherDb().getById(this.addedTeacher.response.body.data.id);
+  console.log("Teacher added log: ", log);
   return assertPostSuccess(
     this.addedTeacher.payload,
     this.addedTeacher.response,
