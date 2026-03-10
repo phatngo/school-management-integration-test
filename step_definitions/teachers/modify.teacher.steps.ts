@@ -11,6 +11,7 @@ import {
 } from "../../utils/api.response.assertion.utils";
 import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
 import { TeacherService } from "../../api/teacher.service";
+import { expect } from "chai";
 
 When(
   "I modify the added teacher with the following data:",
@@ -53,10 +54,27 @@ When(
 );
 
 Then("I see the teacher is modified successfully", async function () {
-  return assertPutSuccess(
+  assertPutSuccess(
     this.modifiedTeacherResponse.payload,
     this.modifiedTeacherResponse.response,
     TEACHER_RESPONSE_SCHEMA_PATH,
+  );
+
+  const updatedTeacherInDb = await this.teacherDb.getById(
+    this.modifiedTeacherResponse.response.body.data.id,
+  );
+
+  if (!updatedTeacherInDb) {
+    throw new Error(
+      `Teacher with id ${this.modifiedTeacherResponse.response.body.data.id} not found in the database`,
+    );
+  }
+
+  expect(updatedTeacherInDb.name).to.equal(
+    this.modifiedTeacherResponse.response.body.data.name,
+  );
+  expect(updatedTeacherInDb.id).to.equal(
+    this.modifiedTeacherResponse.response.body.data.id,
   );
 });
 

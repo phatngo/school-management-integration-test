@@ -16,6 +16,7 @@ When("I delete the added teacher", async function () {
   const response = await teacher.delete(teacherId);
 
   return (this.deleteTeacherResponse = {
+    id: teacherId,
     response,
   });
 });
@@ -26,12 +27,23 @@ When("I delete the teacher with id: {int}", async function (id: number) {
   const response = await teacher.delete(id);
 
   return (this.deleteTeacherResponse = {
+    id,
     response,
   });
 });
 
 Then("I see the teacher is deleted successfully", async function () {
-  return assertDeleteSuccess(this.deleteTeacherResponse.response);
+  assertDeleteSuccess(this.deleteTeacherResponse.response);
+
+  const removedTeacherData = await this.teacherDb.getById(
+    this.deleteTeacherResponse.id,
+  );
+
+  if (removedTeacherData) {
+    throw new Error(
+      `Teacher with id ${this.deleteTeacherResponse.id} still exists in the database after deletion`,
+    );
+  }
 });
 
 Then(

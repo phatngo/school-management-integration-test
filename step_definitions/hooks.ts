@@ -1,8 +1,12 @@
-import { Before, setWorldConstructor } from "@cucumber/cucumber";
+import { BeforeAll, After, setWorldConstructor } from "@cucumber/cucumber";
 import { CustomWorld } from "./world";
 
-// setWorldConstructor(CustomWorld);
+setWorldConstructor(CustomWorld);
 
-// Before(async function (this: CustomWorld) {
-//   // The world is now initialized in the CustomWorld constructor
+// BeforeAll(() => {
+//   // Nothing to do here for now
 // });
+
+After(async function (this: CustomWorld) {
+  await this.closeDbs();
+});
