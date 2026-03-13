@@ -1,22 +1,22 @@
 {
-  "name": "pactum-cucumber-boilerplate",
+  "name": "school-management-integration-test",
   "version": "1.0.0",
-  "description": "Boilerplate project to run REST API tests with Cucumber &amp; Pactum",
+  "description": "Integration tests for the School Management API using Cucumber & Pactum",
   "main": "index.js",
   "scripts": {
     "test": "scripts/test.sh"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pactumjs/pactum-cucumber-boilerplate.git"
+    "url": "git+https://github.com/pactumjs/school-management-integration-test.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/pactumjs/pactum-cucumber-boilerplate/issues"
+    "url": "https://github.com/pactumjs/school-management-integration-test/issues"
   },
-  "homepage": "https://github.com/pactumjs/pactum-cucumber-boilerplate#readme",
+  "homepage": "https://github.com/pactumjs/school-management-integration-test#readme",
   "dependencies": {
     "@cucumber/cucumber": "^8.4.0",
     "chai": "^4.5.0",
