@@ -1,10 +1,13 @@
 import config from "config";
 import { spec } from "pactum";
 import Spec from "pactum/src/models/Spec";
-import { PaginatedResponse, Response } from "../types/api/common.api.types";
+import { SpecResponse } from "../types/api/common.api.types";
 
-// T = Response Body Type, U = Request Body Type
-export class BaseService<T, U = null> {
+/**
+ * T = Response Body Type
+ * U = Request Body Type
+ */
+export class ApiClient<T = null> {
   protected baseUrl: string;
   protected endpoint: string;
   protected headers: Record<string, string> = {
@@ -38,38 +41,43 @@ export class BaseService<T, U = null> {
     return s;
   }
 
-  post(body: U): Spec {
-    return this.createSpec()
+  async post(body: T): Promise<SpecResponse<T>> {
+    const response = await this.createSpec()
       .post(`${this.baseUrl}${this.endpoint}`)
       .withBody(body);
+    return { body, response };
   }
 
-  put(id: number, body: U): Spec {
+  async put(id: number, body: T): Promise<SpecResponse<T>> {
     const path = id ? `${this.endpoint}/${id}` : this.endpoint;
-    return this.createSpec().put(`${this.baseUrl}${path}`).withBody(body);
+    const response = await this.createSpec()
+      .put(`${this.baseUrl}${path}`)
+      .withBody(body);
+    return { body, response };
   }
 
-  get(id?: number): Spec {
+  async get(id?: number): Promise<SpecResponse<null>> {
     const path = id ? `${this.endpoint}/${id}` : this.endpoint;
-    return this.createSpec().get(`${this.baseUrl}${path}`);
+    const response = await this.createSpec().get(`${this.baseUrl}${path}`);
+    return { response };
   }
 
   async list(params?: {
     page?: number;
     limit?: number;
-  }): Promise<PaginatedResponse<T>> {
+  }): Promise<SpecResponse<null>> {
     const path = params
       ? `?${Object.entries(params)
           .map(([key, value]) => `${key}=${value}`)
           .join("&")}`
       : "";
-    return await this.createSpec()
-      .get(`${this.baseUrl}${path}`)
-      .returns("res.body");
+    const response = await this.createSpec().get(`${this.baseUrl}${path}`);
+    return { response };
   }
 
-  delete(id: number): Spec {
+  async delete(id: number): Promise<SpecResponse<null>> {
     const path = id ? `${this.endpoint}/${id}` : this.endpoint;
-    return this.createSpec().delete(`${this.baseUrl}${path}`);
+    const response = await this.createSpec().delete(`${this.baseUrl}${path}`);
+    return { response };
   }
 }

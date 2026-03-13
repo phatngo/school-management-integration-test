@@ -8,40 +8,29 @@ import {
   assertErrorResponse,
 } from "../../utils/api.response.assertion.utils";
 import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
-import { TeacherService } from "../../api/teacher.service";
+import { TeacherApi } from "../../api/teacher.api";
+import Spec from "pactum/src/models/Spec";
 
 When("I delete the added teacher", async function () {
-  const teacher = new TeacherService(this.currentUser);
+  const teacher = new TeacherApi(this.currentUser);
   const teacherId = getAddedTeacherId(this);
-  const response = await teacher.delete(teacherId);
-
-  return (this.deleteTeacherResponse = {
-    id: teacherId,
-    response,
-  });
+  this.deleteTeacherResponse = await teacher.delete(teacherId);
 });
 
 When("I delete the teacher with id: {int}", async function (id: number) {
-  const teacher = new TeacherService(this.currentUser);
-
-  const response = await teacher.delete(id);
-
-  return (this.deleteTeacherResponse = {
-    id,
-    response,
-  });
+  const teacher = new TeacherApi(this.currentUser);
+  this.deleteTeacherResponse = await teacher.delete(id);
 });
 
 Then("I see the teacher is deleted successfully", async function () {
-  assertDeleteSuccess(this.deleteTeacherResponse.response);
+  assertDeleteSuccess<Spec>(this.deleteTeacherResponse.response);
+  const teacherId = getAddedTeacherId(this);
 
-  const removedTeacherData = await this.teacherDb.getById(
-    this.deleteTeacherResponse.id,
-  );
+  const removedTeacherData = await this.teacherDb.getById(teacherId);
 
   if (removedTeacherData) {
     throw new Error(
-      `Teacher with id ${this.deleteTeacherResponse.id} still exists in the database after deletion`,
+      `Teacher with id ${teacherId} still exists in the database after deletion`,
     );
   }
 });

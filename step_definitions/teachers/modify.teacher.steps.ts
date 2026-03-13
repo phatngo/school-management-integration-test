@@ -10,27 +10,19 @@ import {
   assertErrorResponse,
 } from "../../utils/api.response.assertion.utils";
 import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
-import { TeacherService } from "../../api/teacher.service";
+import { TeacherApi } from "../../api/teacher.api";
 import { expect } from "chai";
 
 When(
   "I modify the added teacher with the following data:",
   async function (teacherProfile: { rawTable: [][] }) {
     const data = parseDataTable(teacherProfile.rawTable);
-    const teacher = new TeacherService(this.currentUser);
-
+    const teacher = new TeacherApi(this.currentUser);
     const teacherId = getAddedTeacherId(this);
-
     const payload = {
       name: String(data.name),
     };
-
-    const response = await teacher.put(teacherId, payload).toss();
-
-    return (this.modifiedTeacherResponse = {
-      payload,
-      response,
-    });
+    this.modifiedTeacherResponse = await teacher.put(teacherId, payload);
   },
 );
 
@@ -38,18 +30,13 @@ When(
   "I modify the teacher with id: {int} and the following data:",
   async function (teacherId: number, teacherProfile: { rawTable: [][] }) {
     const data = parseDataTable(teacherProfile.rawTable);
-    const teacher = new TeacherService(this.currentUser);
+    const teacher = new TeacherApi(this.currentUser);
 
     const payload = {
       name: String(data.name),
     };
 
-    const response = await teacher.put(teacherId, payload).toss();
-
-    return (this.modifiedTeacherResponse = {
-      payload,
-      response,
-    });
+    this.modifiedTeacherResponse = await teacher.put(teacherId, payload);
   },
 );
 

@@ -1,15 +1,19 @@
 import { When, Then } from "@cucumber/cucumber";
 import { TEACHER_RESPONSE_SCHEMA_PATH } from "../../constants/api.constants";
-import { TeacherRequestBody } from "../../types/api/teacher.api.types";
-import { getTeacherService, parseDataTable } from "../../utils/cucumber.utils";
+import {
+  TeacherRequestBody,
+  TeacherResponseData,
+} from "../../types/api/teacher.api.types";
+import { parseDataTable } from "../../utils/cucumber.utils";
 import {
   assertPostSuccess,
   assertErrorResponse,
 } from "../../utils/api.response.assertion.utils";
 import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
-import { TeacherService } from "../../api/teacher.service";
+import { TeacherApi } from "../../api/teacher.api";
 import { TeacherDBSchema } from "../../types/db/teacher.db.types";
 import { expect } from "chai";
+import Spec from "pactum/src/models/Spec";
 
 When(
   "I add a new teacher with the following profile:",
@@ -18,18 +22,13 @@ When(
     const payload: TeacherRequestBody = {
       name: String(data.name),
     };
-    const teacher = new TeacherService(this.currentUser);
-    const response = await teacher.post(payload);
-
-    return (this.addedTeacher = {
-      payload,
-      response,
-    });
+    const teacher = new TeacherApi(this.currentUser);
+    this.addedTeacher = await teacher.post(payload);
   },
 );
 
 Then("I see the teacher is created successfully", async function () {
-  assertPostSuccess(
+  assertPostSuccess<TeacherRequestBody, Spec>(
     this.addedTeacher.payload,
     this.addedTeacher.response,
     TEACHER_RESPONSE_SCHEMA_PATH,
@@ -38,13 +37,9 @@ Then("I see the teacher is created successfully", async function () {
     this.addedTeacher.response.body.data.id,
   );
 
-  if (!teacherDataInDb) {
-    throw new Error(
-      `Teacher with id ${this.addedTeacher.response.body.data.id} not found in the database`,
-    );
-  }
-
-  expect(teacherDataInDb.name).to.equal(this.addedTeacher.response.body.data.name);
+  expect(teacherDataInDb.name).to.equal(
+    this.addedTeacher.response.body.data.name,
+  );
   expect(teacherDataInDb.id).to.equal(this.addedTeacher.response.body.data.id);
 });
 

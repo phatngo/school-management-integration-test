@@ -9,28 +9,18 @@ import {
   assertErrorResponse,
 } from "../../utils/api.response.assertion.utils";
 import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
-import { TeacherService } from "../../api/teacher.service";
+import { TeacherApi } from "../../api/teacher.api";
 
 
 When("I view the added teacher", async function () {
-  const teacher = new TeacherService(this.currentUser);
-
+  const teacher = new TeacherApi(this.currentUser);
   const teacherId = getAddedTeacherId(this);
-
-  const response = await teacher.get(teacherId).toss();
-
-  return (this.getTeacherResponse = {
-    response,
-  });
+  this.getTeacherResponse = await teacher.get(teacherId)
 });
 
 When("I view the teacher with id: {int}", async function (teacherId: number) {
-  const teacher = new TeacherService(this.currentUser);
-  const response = await teacher.get(teacherId).toss();
-
-  return (this.getTeacherResponse = {
-    response,
-  });
+  const teacher = new TeacherApi(this.currentUser);
+  this.getTeacherResponse = await teacher.get(teacherId)
 });
 
 Then(

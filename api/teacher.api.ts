@@ -1,14 +1,10 @@
 // requests/GetStudentRequest.ts
-import { BaseService } from "./base.service";
+import { ApiClient } from "../clients/api.client";
 import {
-  TeacherResponseBody,
   TeacherRequestBody,
 } from "../types/api/teacher.api.types";
 
-export class TeacherService extends BaseService<
-  TeacherResponseBody,
-  TeacherRequestBody
-> {
+export class TeacherApi extends ApiClient<TeacherRequestBody> {
   constructor(user?: { username: string; apiKey: string }) {
     super("/teachers", user);
   }

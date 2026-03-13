@@ -9,9 +9,9 @@ const ERROR_RESPONSE_SCHEMA_PATH = "schemas/error.api.response.schema.json";
  * Assert POST request was successful
  * Validates status, schema, code, and compares payload with response data
  */
-export function assertPostSuccess<T, U>(
+export function assertPostSuccess<T, Spec>(
   requestPayload: T,
-  response: U,
+  response: Spec,
   schemaPath: string,
   expectedStatus: number = HTTP_STATUS.CREATED,
   expectedCode: string = RESPONSE_CODE.CREATED,
@@ -30,9 +30,9 @@ export function assertPostSuccess<T, U>(
  * Assert GET request was successful
  * Validates status, schema, code, and compares stored payload with response data
  */
-export function assertGetSuccess<T, U>(
+export function assertGetSuccess<T, Spec>(
   storedPayload: T,
-  response: U,
+  response: Spec,
   schemaPath: string,
   expectedStatus: number = HTTP_STATUS.OK,
   expectedCode: string = RESPONSE_CODE.OK,
@@ -48,9 +48,9 @@ export function assertGetSuccess<T, U>(
  * Assert PUT request was successful
  * Validates status, schema, code, and compares payload with response data
  */
-export function assertPutSuccess<T, U>(
+export function assertPutSuccess<T, Spec>(
   requestPayload: T,
-  response: U,
+  response: Spec,
   schemaPath: string,
   expectedStatus: number = HTTP_STATUS.OK,
   expectedCode: string = RESPONSE_CODE.OK,
@@ -66,8 +66,8 @@ export function assertPutSuccess<T, U>(
  * Assert DELETE request was successful
  * Validates status code (typically 204 No Content or 200 OK)
  */
-export function assertDeleteSuccess<U>(
-  response: U,
+export function assertDeleteSuccess<Spec>(
+  response: Spec,
   expectedStatus: number = HTTP_STATUS.NO_CONTENT,
 ) {
   return expect(response).to.have.status(expectedStatus);
@@ -91,8 +91,8 @@ export function assertListSuccess(
   });
 }
 
-export function assertErrorResponse<U>(
-  response: U,
+export function assertErrorResponse<Spec>(
+  response: Spec,
   expectedStatus: number,
   expectedCode: string,
   expectedErrorMessage: string,
@@ -104,9 +104,9 @@ export function assertErrorResponse<U>(
   });
 }
 
-export function assertCommon<T>(
+export function assertCommon<Spec>(
   responseSchemaPath: string,
-  response: T,
+  response: Spec,
   expectedStatus: number,
 ) {
   const schema = readJSONFile(responseSchemaPath);

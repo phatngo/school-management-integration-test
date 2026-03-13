@@ -1,5 +1,4 @@
-import config from "config";
-import { TeacherService } from "../api/teacher.service";
+import { TeacherApi } from "../api/teacher.api";
 
 export function parseDataTable(
   rawTable: any,
@@ -26,8 +25,8 @@ function convertDataTableValue(value: string): string | number | boolean {
 export function getTeacherService(currentUser: {
   username: string;
   apiKey: string;
-}): TeacherService {
-  return new TeacherService(currentUser);
+}): TeacherApi {
+  return new TeacherApi(currentUser);
 }
 
 export function getAddedTeacherId(world: any): number {
