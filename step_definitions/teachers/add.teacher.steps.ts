@@ -8,7 +8,6 @@ import {
 } from "../../utils/api.response.assertion.utils";
 import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
 import { TeacherService } from "../../api/teacher.service";
-import { TeacherDb } from "../../db/teacher.db";
 import { TeacherDBSchema } from "../../types/db/teacher.db.types";
 import { expect } from "chai";
 
