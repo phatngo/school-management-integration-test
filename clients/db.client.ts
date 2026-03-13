@@ -1,4 +1,4 @@
-import mysql, { FieldPacket } from "mysql2/promise";
+import mysql from "mysql2/promise";
 import config from "config";
 
 export class DBClient<T extends Record<string, any> = Record<string, any>> {

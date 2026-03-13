@@ -2,3 +2,4 @@ node_modules/
 .pactum
 .DS_Store
 .env
+logs

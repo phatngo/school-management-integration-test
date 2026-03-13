@@ -9,6 +9,13 @@ export const HTTP_STATUS = {
   BAD_REQUEST: 400,
 };
 
+export const HTTP_METHOD = {
+  POST: "POST",
+  PUT: "PUT",
+  GET: "GET",
+  DELETE: "DELETE",
+};
+
 export const RESPONSE_CODE = {
   CREATED: "CREATED",
   OK: "OK",

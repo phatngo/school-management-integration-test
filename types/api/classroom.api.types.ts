@@ -1,7 +1,7 @@
 export type ClassRoomRequestBody = {
   name: string;
   teacher_id: number;
-  class_type: "primary" | "secondary" | "high";
+  class_type: string;
 };
 
 export type ClassRoomResponseData = ClassRoomRequestBody & {

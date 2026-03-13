@@ -1,7 +1,7 @@
 import { setWorldConstructor, World, IWorldOptions } from "@cucumber/cucumber";
 import config from "config";
-import { UserConfigPaths } from "../constants/users.constants";
-import { TeacherDb } from "../db/teacher.db";
+import { UserConfigPaths } from "../../constants/users.constants";
+import { TeacherDb } from "../../db/teacher.db";
 
 export class CustomWorld extends World {
   currentUser: Record<string, string>;

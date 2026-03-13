@@ -1,7 +1,8 @@
 import config from "config";
 import { spec } from "pactum";
-import Spec from "pactum/src/models/Spec";
 import { SpecResponse } from "../types/api/common.api.types";
+import { logApiRequestInfo } from "../utils/logger.utils";
+import { HTTP_METHOD } from "../constants/api.constants";
 
 /**
  * T = Response Body Type
@@ -45,6 +46,7 @@ export class ApiClient<T = null> {
     const response = await this.createSpec()
       .post(`${this.baseUrl}${this.endpoint}`)
       .withBody(body);
+    logApiRequestInfo(HTTP_METHOD.POST, this.endpoint, response, body);
     return { body, response };
   }
 
@@ -53,12 +55,14 @@ export class ApiClient<T = null> {
     const response = await this.createSpec()
       .put(`${this.baseUrl}${path}`)
       .withBody(body);
+    logApiRequestInfo(HTTP_METHOD.PUT, this.endpoint, response, body);
     return { body, response };
   }
 
   async get(id?: number): Promise<SpecResponse<null>> {
     const path = id ? `${this.endpoint}/${id}` : this.endpoint;
     const response = await this.createSpec().get(`${this.baseUrl}${path}`);
+    logApiRequestInfo(HTTP_METHOD.GET, this.endpoint, response);
     return { response };
   }
 
@@ -72,12 +76,14 @@ export class ApiClient<T = null> {
           .join("&")}`
       : "";
     const response = await this.createSpec().get(`${this.baseUrl}${path}`);
+    logApiRequestInfo(HTTP_METHOD.GET, this.endpoint, response);
     return { response };
   }
 
   async delete(id: number): Promise<SpecResponse<null>> {
     const path = id ? `${this.endpoint}/${id}` : this.endpoint;
     const response = await this.createSpec().delete(`${this.baseUrl}${path}`);
+    logApiRequestInfo(HTTP_METHOD.DELETE, this.endpoint, response);
     return { response };
   }
 }
