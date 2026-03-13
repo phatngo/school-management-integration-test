@@ -55,14 +55,14 @@ export class ApiClient<T = null> {
     const response = await this.createSpec()
       .put(`${this.baseUrl}${path}`)
       .withBody(body);
-    logApiRequestInfo(HTTP_METHOD.PUT, this.endpoint, response, body);
+    logApiRequestInfo(HTTP_METHOD.PUT, path, response, body);
     return { body, response };
   }
 
   async get(id?: number): Promise<SpecResponse<null>> {
     const path = id ? `${this.endpoint}/${id}` : this.endpoint;
     const response = await this.createSpec().get(`${this.baseUrl}${path}`);
-    logApiRequestInfo(HTTP_METHOD.GET, this.endpoint, response);
+    logApiRequestInfo(HTTP_METHOD.GET, path, response);
     return { response };
   }
 
@@ -76,14 +76,14 @@ export class ApiClient<T = null> {
           .join("&")}`
       : "";
     const response = await this.createSpec().get(`${this.baseUrl}${path}`);
-    logApiRequestInfo(HTTP_METHOD.GET, this.endpoint, response);
+    logApiRequestInfo(HTTP_METHOD.GET, path, response);
     return { response };
   }
 
   async delete(id: number): Promise<SpecResponse<null>> {
     const path = id ? `${this.endpoint}/${id}` : this.endpoint;
     const response = await this.createSpec().delete(`${this.baseUrl}${path}`);
-    logApiRequestInfo(HTTP_METHOD.DELETE, this.endpoint, response);
+    logApiRequestInfo(HTTP_METHOD.DELETE, path, response);
     return { response };
   }
 }
