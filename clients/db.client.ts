@@ -1,5 +1,5 @@
 import mysql from "mysql2/promise";
-import config from "config";
+import { dbConfig } from "../config/db.config";
 import { logDbQueryInfo } from "../utils/logger.utils";
 
 export class DBClient<
@@ -8,15 +8,7 @@ export class DBClient<
     string | number | boolean
   >,
 > {
-  protected pool: mysql.Pool = mysql.createPool({
-    host: config.get("db.host") as unknown as string,
-    port: config.get("db.port") as unknown as number,
-    user: config.get("db.username") as unknown as string,
-    password: config.get("db.password") as unknown as string,
-    database: config.get("db.name") as unknown as string,
-    waitForConnections: true,
-    connectionLimit: 10,
-  });
+  protected pool: mysql.Pool = mysql.createPool(dbConfig);
 
   protected tableName: string;
 
@@ -30,7 +22,7 @@ export class DBClient<
     }
     const query = `SELECT * FROM ${this.tableName} WHERE id = ?`;
     const params = [id];
-    
+
     const [rows] = await this.pool.query(query, params);
     const data = (rows as T[])[0] ? (rows as T[])[0] : null;
     logDbQueryInfo(query, params, data);
@@ -41,7 +33,7 @@ export class DBClient<
     if (isNaN(limit) || isNaN(offset)) {
       throw new Error("Invalid limit or offset");
     }
-    const query = `SELECT * FROM ${this.tableName} LIMIT ? OFFSET ?`
+    const query = `SELECT * FROM ${this.tableName} LIMIT ? OFFSET ?`;
     const params = [limit, offset];
 
     const [data] = await this.pool.query(query, params);
