@@ -2,7 +2,6 @@ import { When, Then } from "@cucumber/cucumber";
 import { TEACHER_RESPONSE_SCHEMA_PATH } from "../../constants/api.constants";
 import {
   TeacherRequestBody,
-  TeacherResponseData,
 } from "../../types/api/teacher.api.types";
 import { parseDataTable } from "../../utils/cucumber.utils";
 import {
@@ -13,7 +12,6 @@ import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
 import { TeacherApi } from "../../api/teacher.api";
 import { TeacherDBSchema } from "../../types/db/teacher.db.types";
 import { expect } from "chai";
-import Spec from "pactum/src/models/Spec";
 
 When(
   "I add a new teacher with the following profile:",
@@ -28,7 +26,7 @@ When(
 );
 
 Then("I see the teacher is created successfully", async function () {
-  assertPostSuccess<TeacherRequestBody, Spec>(
+  assertPostSuccess<TeacherRequestBody>(
     this.addedTeacher.payload,
     this.addedTeacher.response,
     TEACHER_RESPONSE_SCHEMA_PATH,

@@ -2,6 +2,7 @@ import { expect } from "pactum";
 import { readJSONFile } from "./files.utils";
 import { like } from "pactum-matchers";
 import { HTTP_STATUS, RESPONSE_CODE } from "../constants/api.constants";
+import { PactResponse } from "../types/api/common.api.types";
 
 const ERROR_RESPONSE_SCHEMA_PATH = "schemas/error.api.response.schema.json";
 
@@ -9,9 +10,9 @@ const ERROR_RESPONSE_SCHEMA_PATH = "schemas/error.api.response.schema.json";
  * Assert POST request was successful
  * Validates status, schema, code, and compares payload with response data
  */
-export function assertPostSuccess<T, Spec>(
+export function assertPostSuccess<T>(
   requestPayload: T,
-  response: Spec,
+  response: PactResponse,
   schemaPath: string,
   expectedStatus: number = HTTP_STATUS.CREATED,
   expectedCode: string = RESPONSE_CODE.CREATED,
@@ -30,9 +31,9 @@ export function assertPostSuccess<T, Spec>(
  * Assert GET request was successful
  * Validates status, schema, code, and compares stored payload with response data
  */
-export function assertGetSuccess<T, Spec>(
+export function assertGetSuccess<T>(
   storedPayload: T,
-  response: Spec,
+  response: PactResponse,
   schemaPath: string,
   expectedStatus: number = HTTP_STATUS.OK,
   expectedCode: string = RESPONSE_CODE.OK,
@@ -48,9 +49,9 @@ export function assertGetSuccess<T, Spec>(
  * Assert PUT request was successful
  * Validates status, schema, code, and compares payload with response data
  */
-export function assertPutSuccess<T, Spec>(
+export function assertPutSuccess<T>(
   requestPayload: T,
-  response: Spec,
+  response: PactResponse,
   schemaPath: string,
   expectedStatus: number = HTTP_STATUS.OK,
   expectedCode: string = RESPONSE_CODE.OK,
@@ -66,8 +67,8 @@ export function assertPutSuccess<T, Spec>(
  * Assert DELETE request was successful
  * Validates status code (typically 204 No Content or 200 OK)
  */
-export function assertDeleteSuccess<Spec>(
-  response: Spec,
+export function assertDeleteSuccess(
+  response: PactResponse,
   expectedStatus: number = HTTP_STATUS.NO_CONTENT,
 ) {
   return expect(response).to.have.status(expectedStatus);
@@ -78,7 +79,7 @@ export function assertDeleteSuccess<Spec>(
  * Validates status, schema, code, and that data is an array
  */
 export function assertListSuccess(
-  response: any,
+  response: PactResponse,
   schemaPath: string,
   expectedStatus: number = HTTP_STATUS.OK,
   expectedCode: string = RESPONSE_CODE.OK,
@@ -91,8 +92,8 @@ export function assertListSuccess(
   });
 }
 
-export function assertErrorResponse<Spec>(
-  response: Spec,
+export function assertErrorResponse(
+  response: PactResponse,
   expectedStatus: number,
   expectedCode: string,
   expectedErrorMessage: string,
@@ -104,9 +105,9 @@ export function assertErrorResponse<Spec>(
   });
 }
 
-export function assertCommon<Spec>(
+export function assertCommon(
   responseSchemaPath: string,
-  response: Spec,
+  response: PactResponse,
   expectedStatus: number,
 ) {
   const schema = readJSONFile(responseSchemaPath);

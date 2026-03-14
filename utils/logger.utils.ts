@@ -1,28 +1,45 @@
 import log4js from "log4js";
-import Spec from "pactum/src/models/Spec";
+import { loggerConfig } from "../config/logger.config";
+import { ApiLog } from "../types/api/common.api.types";
+import { DbQueryLog } from "../types/db/common.db.types";
+import { PactResponse } from "../types/api/common.api.types";
 
-log4js.configure({
-  appenders: { cheese: { type: "file", filename: `logs/${new Date().toISOString()}.log` } },
-  categories: { default: { appenders: ["cheese"], level: "trace" } },
-});
+log4js.configure(loggerConfig);
+const logger = log4js.getLogger();
 
 export function logScenarioName(scenarioName: string) {
-  const logger = log4js.getLogger("cheese");
   logger.info(`Scenario: ${scenarioName}`);
 }
 
 export function logApiRequestInfo<T = null>(
   method: string,
   endpoint: string,
-  specResponse: any,
+  pactResponse: PactResponse,
   payload?: T,
 ) {
-  const logger = log4js.getLogger("cheese");
-  const apiInfo = {
+  const apiLog: ApiLog = {
     method,
     endpoint,
-    responseBody: specResponse.body,
+    responseCode: pactResponse.statusCode,
+    responseBody: pactResponse.body,
     payload: payload ? payload : null,
   };
-  logger.debug("API Request Info:", `\t${JSON.stringify(apiInfo, null, 2)}`);
+  logger.debug("API Request Info:", `\t${formatLog(apiLog)}`);
+}
+
+export function logDbQueryInfo<T = null>(
+  query: string,
+  params: any[] | null = null,
+  result: T,
+) {
+  const dbLog: DbQueryLog = {
+    query,
+    params: params ? params : null,
+    result,
+  };
+  logger.debug("DB Query Info:", `\t${formatLog(dbLog)}`);
+}
+
+function formatLog(logInfo: ApiLog | DbQueryLog) {
+  return JSON.stringify(logInfo, null, 2);
 }

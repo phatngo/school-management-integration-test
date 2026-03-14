@@ -2,7 +2,6 @@ import { When, Then } from "@cucumber/cucumber";
 import { TEACHER_RESPONSE_SCHEMA_PATH } from "../../constants/api.constants";
 import {
   getAddedTeacherId,
-  getTeacherService,
 } from "../../utils/cucumber.utils";
 import {
   assertGetSuccess,
@@ -10,23 +9,24 @@ import {
 } from "../../utils/api.response.assertion.utils";
 import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
 import { TeacherApi } from "../../api/teacher.api";
-
+import { TeacherRequestBody } from "../../types/api/teacher.api.types";
+import { PactResponse } from "../../types/api/common.api.types";
 
 When("I view the added teacher", async function () {
   const teacher = new TeacherApi(this.currentUser);
   const teacherId = getAddedTeacherId(this);
-  this.getTeacherResponse = await teacher.get(teacherId)
+  this.getTeacherResponse = await teacher.get(teacherId);
 });
 
 When("I view the teacher with id: {int}", async function (teacherId: number) {
   const teacher = new TeacherApi(this.currentUser);
-  this.getTeacherResponse = await teacher.get(teacherId)
+  this.getTeacherResponse = await teacher.get(teacherId);
 });
 
 Then(
   "I see the fetched teacher data matches the data when created",
   async function () {
-    return assertGetSuccess(
+    return assertGetSuccess<TeacherRequestBody>(
       this.addedTeacher.payload,
       this.getTeacherResponse.response,
       TEACHER_RESPONSE_SCHEMA_PATH,

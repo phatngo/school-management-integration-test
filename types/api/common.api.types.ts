@@ -1,22 +1,16 @@
-import Spec from "pactum/src/models/Spec";
+import { spec } from "pactum";
 
-export type ResponseBody<T> =
-  | {
-      code: string;
-      error: string;
-    }
-  | {
-      code: string;
-      data: T;
-    }
-  | null;
+export type PactResponse = Awaited<ReturnType<ReturnType<typeof spec>["toss"]>>;
 
-export type PaginatedResponse<T> = {
-  code: string;
-  data: T[];
+export type RequestInfo<T> = {
+  body?: T;
+  response: PactResponse;
 };
 
-export type SpecResponse<T> = {
-  body?: T;
-  response: Spec;
-}
+export type ApiLog = {
+  method: string;
+  endpoint: string;
+  responseCode: number;
+  responseBody: any;
+  payload?: any;
+};

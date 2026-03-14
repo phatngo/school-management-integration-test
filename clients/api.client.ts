@@ -1,6 +1,6 @@
 import config from "config";
 import { spec } from "pactum";
-import { SpecResponse } from "../types/api/common.api.types";
+import { RequestInfo, PactResponse } from "../types/api/common.api.types";
 import { logApiRequestInfo } from "../utils/logger.utils";
 import { HTTP_METHOD } from "../constants/api.constants";
 
@@ -8,6 +8,7 @@ import { HTTP_METHOD } from "../constants/api.constants";
  * T = Response Body Type
  * U = Request Body Type
  */
+
 export class ApiClient<T = null> {
   protected baseUrl: string;
   protected endpoint: string;
@@ -42,26 +43,28 @@ export class ApiClient<T = null> {
     return s;
   }
 
-  async post(body: T): Promise<SpecResponse<T>> {
-    const response = await this.createSpec()
+  async post(body: T): Promise<RequestInfo<T>> {
+    const response: PactResponse = await this.createSpec()
       .post(`${this.baseUrl}${this.endpoint}`)
       .withBody(body);
     logApiRequestInfo(HTTP_METHOD.POST, this.endpoint, response, body);
     return { body, response };
   }
 
-  async put(id: number, body: T): Promise<SpecResponse<T>> {
+  async put(id: number, body: T): Promise<RequestInfo<T>> {
     const path = id ? `${this.endpoint}/${id}` : this.endpoint;
-    const response = await this.createSpec()
+    const response: PactResponse = await this.createSpec()
       .put(`${this.baseUrl}${path}`)
       .withBody(body);
     logApiRequestInfo(HTTP_METHOD.PUT, path, response, body);
     return { body, response };
   }
 
-  async get(id?: number): Promise<SpecResponse<null>> {
+  async get(id?: number): Promise<RequestInfo<null>> {
     const path = id ? `${this.endpoint}/${id}` : this.endpoint;
-    const response = await this.createSpec().get(`${this.baseUrl}${path}`);
+    const response: PactResponse = await this.createSpec().get(
+      `${this.baseUrl}${path}`,
+    );
     logApiRequestInfo(HTTP_METHOD.GET, path, response);
     return { response };
   }
@@ -69,20 +72,24 @@ export class ApiClient<T = null> {
   async list(params?: {
     page?: number;
     limit?: number;
-  }): Promise<SpecResponse<null>> {
+  }): Promise<RequestInfo<null>> {
     const path = params
       ? `?${Object.entries(params)
           .map(([key, value]) => `${key}=${value}`)
           .join("&")}`
       : "";
-    const response = await this.createSpec().get(`${this.baseUrl}${path}`);
+    const response: PactResponse = await this.createSpec().get(
+      `${this.baseUrl}${path}`,
+    );
     logApiRequestInfo(HTTP_METHOD.GET, path, response);
     return { response };
   }
 
-  async delete(id: number): Promise<SpecResponse<null>> {
+  async delete(id: number): Promise<RequestInfo<null>> {
     const path = id ? `${this.endpoint}/${id}` : this.endpoint;
-    const response = await this.createSpec().delete(`${this.baseUrl}${path}`);
+    const response: PactResponse = await this.createSpec().delete(
+      `${this.baseUrl}${path}`,
+    );
     logApiRequestInfo(HTTP_METHOD.DELETE, path, response);
     return { response };
   }

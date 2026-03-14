@@ -1,7 +1,13 @@
 import mysql from "mysql2/promise";
 import config from "config";
+import { logDbQueryInfo } from "../utils/logger.utils";
 
-export class DBClient<T extends Record<string, any> = Record<string, any>> {
+export class DBClient<
+  T extends Record<string, string | number | boolean> = Record<
+    string,
+    string | number | boolean
+  >,
+> {
   protected pool: mysql.Pool = mysql.createPool({
     host: config.get("db.host") as unknown as string,
     port: config.get("db.port") as unknown as number,
@@ -22,27 +28,25 @@ export class DBClient<T extends Record<string, any> = Record<string, any>> {
     if (isNaN(id)) {
       throw new Error("Invalid id");
     }
-
-    const [rows, info] = await this.pool.query(
-      `SELECT * FROM ${this.tableName} WHERE id = ?`,
-      [id],
-    );
-
-    const data = rows as T[];
-    return data[0] ? data[0] : null;
+    const query = `SELECT * FROM ${this.tableName} WHERE id = ?`;
+    const params = [id];
+    
+    const [rows] = await this.pool.query(query, params);
+    const data = (rows as T[])[0] ? (rows as T[])[0] : null;
+    logDbQueryInfo(query, params, data);
+    return data;
   }
 
   async getList(limit: number, offset: number): Promise<T[]> {
     if (isNaN(limit) || isNaN(offset)) {
       throw new Error("Invalid limit or offset");
     }
+    const query = `SELECT * FROM ${this.tableName} LIMIT ? OFFSET ?`
+    const params = [limit, offset];
 
-    const rows = await this.pool.query(
-      `SELECT * FROM ${this.tableName} LIMIT ? OFFSET ?`,
-      [limit, offset],
-    );
-
-    return rows[0] as T[];
+    const [data] = await this.pool.query(query, params);
+    logDbQueryInfo(query, params, data);
+    return data as T[];
   }
 
   async deleteById(id: number): Promise<mysql.OkPacket> {
@@ -50,11 +54,11 @@ export class DBClient<T extends Record<string, any> = Record<string, any>> {
       throw new Error("Invalid id");
     }
 
-    const result = await this.pool.query(
-      `DELETE FROM ${this.tableName} WHERE id = ?`,
-      [id],
-    );
+    const query = `DELETE FROM ${this.tableName} WHERE id = ?`;
+    const params = [id];
 
+    const result = await this.pool.query(query, params);
+    logDbQueryInfo(query, params, result[0]);
     return result[0] as mysql.OkPacket;
   }
 

@@ -2,7 +2,6 @@ import { When, Then } from "@cucumber/cucumber";
 import { TEACHER_RESPONSE_SCHEMA_PATH } from "../../constants/api.constants";
 import {
   getAddedTeacherId,
-  getTeacherService,
   parseDataTable,
 } from "../../utils/cucumber.utils";
 import {
@@ -12,6 +11,7 @@ import {
 import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
 import { TeacherApi } from "../../api/teacher.api";
 import { expect } from "chai";
+import { TeacherRequestBody } from "../../types/api/teacher.api.types";
 
 When(
   "I modify the added teacher with the following data:",
@@ -41,7 +41,7 @@ When(
 );
 
 Then("I see the teacher is modified successfully", async function () {
-  assertPutSuccess(
+  assertPutSuccess<TeacherRequestBody>(
     this.modifiedTeacherResponse.payload,
     this.modifiedTeacherResponse.response,
     TEACHER_RESPONSE_SCHEMA_PATH,

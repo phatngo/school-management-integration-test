@@ -1,15 +1,11 @@
 import { When, Then } from "@cucumber/cucumber";
-import {
-  getAddedTeacherId,
-  getTeacherService,
-} from "../../utils/cucumber.utils";
+import { getAddedTeacherId } from "../../utils/cucumber.utils";
 import {
   assertDeleteSuccess,
   assertErrorResponse,
 } from "../../utils/api.response.assertion.utils";
 import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
 import { TeacherApi } from "../../api/teacher.api";
-import Spec from "pactum/src/models/Spec";
 
 When("I delete the added teacher", async function () {
   const teacher = new TeacherApi(this.currentUser);
@@ -23,7 +19,7 @@ When("I delete the teacher with id: {int}", async function (id: number) {
 });
 
 Then("I see the teacher is deleted successfully", async function () {
-  assertDeleteSuccess<Spec>(this.deleteTeacherResponse.response);
+  assertDeleteSuccess(this.deleteTeacherResponse.response);
   const teacherId = getAddedTeacherId(this);
 
   const removedTeacherData = await this.teacherDb.getById(teacherId);
