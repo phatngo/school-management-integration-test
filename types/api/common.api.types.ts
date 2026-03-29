@@ -4,6 +4,10 @@ export type PactResponse = Awaited<ReturnType<ReturnType<typeof spec>["toss"]>>;
 
 export type RequestInfo<T> = {
   body?: T;
+  params?: {
+    page?: number;
+    limit?: number;
+  };
   response: PactResponse;
 };
 

@@ -52,7 +52,7 @@ export class ApiClient<T = null> {
   }
 
   async put(id: number, body: T): Promise<RequestInfo<T>> {
-    const path = id ? `${this.endpoint}/${id}` : this.endpoint;
+    const path = this.getPathWithId(id);
     const response: PactResponse = await this.createSpec()
       .put(`${this.baseUrl}${path}`)
       .withBody(body);
@@ -61,7 +61,7 @@ export class ApiClient<T = null> {
   }
 
   async get(id?: number): Promise<RequestInfo<null>> {
-    const path = id ? `${this.endpoint}/${id}` : this.endpoint;
+    const path = this.getPathWithId(id);
     const response: PactResponse = await this.createSpec().get(
       `${this.baseUrl}${path}`,
     );
@@ -74,23 +74,27 @@ export class ApiClient<T = null> {
     limit?: number;
   }): Promise<RequestInfo<null>> {
     const path = params
-      ? `?${Object.entries(params)
+      ? `${this.endpoint}?${Object.entries(params)
           .map(([key, value]) => `${key}=${value}`)
           .join("&")}`
-      : "";
+      : this.endpoint;
     const response: PactResponse = await this.createSpec().get(
       `${this.baseUrl}${path}`,
     );
     logApiRequestInfo(HTTP_METHOD.GET, path, response);
-    return { response };
+    return { params, response };
   }
 
-  async delete(id: number): Promise<RequestInfo<null>> {
-    const path = id ? `${this.endpoint}/${id}` : this.endpoint;
+  async delete(id?: number): Promise<RequestInfo<null>> {
+    const path = this.getPathWithId(id);
     const response: PactResponse = await this.createSpec().delete(
       `${this.baseUrl}${path}`,
     );
     logApiRequestInfo(HTTP_METHOD.DELETE, path, response);
     return { response };
+  }
+
+  getPathWithId(id?: number) {
+    return id ? `${this.endpoint}/${id}` : this.endpoint;
   }
 }

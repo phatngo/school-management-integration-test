@@ -5,8 +5,8 @@ import {
 } from "../../types/api/teacher.api.types";
 import { parseDataTable } from "../../utils/cucumber.utils";
 import {
-  assertPostSuccess,
   assertErrorResponse,
+  assertCommon,
 } from "../../utils/api.response.assertion.utils";
 import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
 import { TeacherApi } from "../../api/teacher.api";
@@ -26,19 +26,25 @@ When(
 );
 
 Then("I see the teacher is created successfully", async function () {
-  assertPostSuccess<TeacherRequestBody>(
-    this.addedTeacher.payload,
-    this.addedTeacher.response,
-    TEACHER_RESPONSE_SCHEMA_PATH,
-  );
+  assertCommon(TEACHER_RESPONSE_SCHEMA_PATH, this.addedTeacher.response, HTTP_STATUS.CREATED);
+
+  const responseBody = this.addedTeacher.response.body;
+  const requestbody = this.addedTeacher.body;
+
+  // Compare data in response with request body
+  expect(responseBody.code).to.equal(RESPONSE_CODE.CREATED);
+  expect(responseBody.data.name).to.equal(requestbody.name);
+  expect(responseBody.data.id).to.be.a("number");
+
+  // Check if the teacher is actually added in the database
   const teacherDataInDb: TeacherDBSchema = await this.teacherDb.getById(
-    this.addedTeacher.response.body.data.id,
+    responseBody.data.id,
   );
 
   expect(teacherDataInDb.name).to.equal(
-    this.addedTeacher.response.body.data.name,
+    responseBody.data.name,
   );
-  expect(teacherDataInDb.id).to.equal(this.addedTeacher.response.body.data.id);
+  expect(teacherDataInDb.id).to.equal(responseBody.data.id);
 });
 
 Then("I fail to add the teacher as name cannot be empty", async function () {
