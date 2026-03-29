@@ -2,6 +2,7 @@ import { When, Then } from "@cucumber/cucumber";
 import { TEACHER_RESPONSE_SCHEMA_PATH } from "../../constants/api.constants";
 import {
   TeacherRequestBody,
+  TeacherResponseData,
 } from "../../types/api/teacher.api.types";
 import { parseDataTable } from "../../utils/cucumber.utils";
 import {
@@ -12,6 +13,7 @@ import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
 import { TeacherApi } from "../../api/teacher.api";
 import { TeacherDBSchema } from "../../types/db/teacher.db.types";
 import { expect } from "chai";
+import { ResponseBody, RequestInfo } from "../../types/api/common.api.types";
 
 When(
   "I add a new teacher with the following profile:",
@@ -21,15 +23,22 @@ When(
       name: String(data.name),
     };
     const teacher = new TeacherApi(this.currentUser);
-    this.addedTeacher = await teacher.post(payload);
+    const addedTeacher: RequestInfo<TeacherRequestBody> =
+      await teacher.post(payload);
+    this.addedTeacher = addedTeacher;
   },
 );
 
 Then("I see the teacher is created successfully", async function () {
-  assertCommon(TEACHER_RESPONSE_SCHEMA_PATH, this.addedTeacher.response, HTTP_STATUS.CREATED);
+  assertCommon(
+    TEACHER_RESPONSE_SCHEMA_PATH,
+    this.addedTeacher.response,
+    HTTP_STATUS.CREATED,
+  );
 
-  const responseBody = this.addedTeacher.response.body;
-  const requestbody = this.addedTeacher.body;
+  const responseBody: ResponseBody<TeacherResponseData> =
+    this.addedTeacher.response.body;
+  const requestbody: TeacherRequestBody = this.addedTeacher.body;
 
   // Compare data in response with request body
   expect(responseBody.code).to.equal(RESPONSE_CODE.CREATED);
@@ -41,9 +50,7 @@ Then("I see the teacher is created successfully", async function () {
     responseBody.data.id,
   );
 
-  expect(teacherDataInDb.name).to.equal(
-    responseBody.data.name,
-  );
+  expect(teacherDataInDb.name).to.equal(responseBody.data.name);
   expect(teacherDataInDb.id).to.equal(responseBody.data.id);
 });
 

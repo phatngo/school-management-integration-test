@@ -8,6 +8,8 @@ import {
 import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
 import { TeacherApi } from "../../api/teacher.api";
 import { expect } from "chai";
+import { TeacherRequestBody } from "../../types/api/teacher.api.types";
+import { RequestInfo } from "../../types/api/common.api.types";
 
 When(
   "I modify the added teacher with the following data:",
@@ -18,7 +20,11 @@ When(
     const payload = {
       name: String(data.name),
     };
-    this.modifiedTeacher = await teacher.put(teacherId, payload);
+    const modifiedTeacher: RequestInfo<TeacherRequestBody> = await teacher.put(
+      teacherId,
+      payload,
+    );
+    this.modifiedTeacher = modifiedTeacher;
   },
 );
 
@@ -32,7 +38,11 @@ When(
       name: String(data.name),
     };
 
-    this.modifiedTeacher = await teacher.put(teacherId, payload);
+    const modifiedTeacher: RequestInfo<TeacherRequestBody> = await teacher.put(
+      teacherId,
+      payload,
+    );
+    this.modifiedTeacher = modifiedTeacher;
   },
 );
 
@@ -48,15 +58,11 @@ Then("I see the teacher is modified successfully", async function () {
 
   // Compare data in response with request body
   expect(responseBody.code).to.equal(RESPONSE_CODE.OK);
-  expect(responseBody.data.name).to.equal(
-    requestbody.name,
-  );
+  expect(responseBody.data.name).to.equal(requestbody.name);
   expect(responseBody.data.id).to.be.a("number");
 
   // Check if the teacher is actually updated in the database
-  const updatedTeacherInDb = await this.teacherDb.getById(
-    responseBody.data.id,
-  );
+  const updatedTeacherInDb = await this.teacherDb.getById(responseBody.data.id);
 
   if (!updatedTeacherInDb) {
     throw new Error(
@@ -64,12 +70,8 @@ Then("I see the teacher is modified successfully", async function () {
     );
   }
 
-  expect(updatedTeacherInDb.name).to.equal(
-    responseBody.data.name,
-  );
-  expect(updatedTeacherInDb.id).to.equal(
-    responseBody.data.id,
-  );
+  expect(updatedTeacherInDb.name).to.equal(responseBody.data.name);
+  expect(updatedTeacherInDb.id).to.equal(responseBody.data.id);
 });
 
 Then(

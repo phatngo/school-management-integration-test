@@ -7,12 +7,14 @@ import {
 import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
 import { TeacherApi } from "../../api/teacher.api";
 import { expect } from "chai";
+import { RequestInfo } from "../../types/api/common.api.types";
 
 When(
   "I view page {int} with limit {int} of teachers",
   async function (page: number, limit: number) {
     const teacher = new TeacherApi(this.currentUser);
-    this.getListTeachers = await teacher.list({ page, limit });
+    const getListTeachers: RequestInfo = await teacher.list({ page, limit });
+    this.getListTeachers = getListTeachers;
   },
 );
 

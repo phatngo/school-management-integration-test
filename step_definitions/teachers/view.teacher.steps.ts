@@ -8,16 +8,19 @@ import {
 import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
 import { TeacherApi } from "../../api/teacher.api";
 import { expect } from "chai";
+import { RequestInfo } from "../../types/api/common.api.types";
 
 When("I view the added teacher", async function () {
   const teacher = new TeacherApi(this.currentUser);
   const teacherId = getAddedTeacherId(this);
-  this.getTeacher = await teacher.get(teacherId);
+  const getTeacher: RequestInfo = await teacher.get(teacherId);
+  this.getTeacher = getTeacher;
 });
 
 When("I view the teacher with id: {int}", async function (teacherId: number) {
   const teacher = new TeacherApi(this.currentUser);
-  this.getTeacher = await teacher.get(teacherId);
+  const getTeacher: RequestInfo = await teacher.get(teacherId);
+  this.getTeacher = getTeacher;
 });
 
 Then(
