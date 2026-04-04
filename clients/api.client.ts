@@ -1,6 +1,10 @@
 import config from "config";
 import { spec } from "pactum";
-import { RequestInfo, PactResponse } from "../types/api/common.api.types";
+import {
+  RequestInfo,
+  PactResponse,
+  ListOptions,
+} from "../types/api/common.api.types";
 import { logApiRequestInfo } from "../utils/logger.utils";
 import { HTTP_METHOD } from "../constants/api.constants";
 
@@ -51,7 +55,7 @@ export class ApiClient<T = null> {
     return { body, response };
   }
 
-  async put(id: number, body: T): Promise<RequestInfo<T>> {
+  async put(id: string, body: T): Promise<RequestInfo<T>> {
     const path = this.getPathWithId(id);
     const response: PactResponse = await this.createSpec()
       .put(`${this.baseUrl}${path}`)
@@ -60,7 +64,7 @@ export class ApiClient<T = null> {
     return { body, response };
   }
 
-  async get(id?: number): Promise<RequestInfo<null>> {
+  async get(id?: string): Promise<RequestInfo<null>> {
     const path = this.getPathWithId(id);
     const response: PactResponse = await this.createSpec().get(
       `${this.baseUrl}${path}`,
@@ -69,10 +73,7 @@ export class ApiClient<T = null> {
     return { response };
   }
 
-  async list(params?: {
-    page?: number;
-    limit?: number;
-  }): Promise<RequestInfo<null>> {
+  async list(params?: ListOptions): Promise<RequestInfo<null>> {
     const path = params
       ? `${this.endpoint}?${Object.entries(params)
           .map(([key, value]) => `${key}=${value}`)
@@ -85,7 +86,7 @@ export class ApiClient<T = null> {
     return { params, response };
   }
 
-  async delete(id?: number): Promise<RequestInfo<null>> {
+  async delete(id?: string): Promise<RequestInfo<null>> {
     const path = this.getPathWithId(id);
     const response: PactResponse = await this.createSpec().delete(
       `${this.baseUrl}${path}`,
@@ -94,7 +95,7 @@ export class ApiClient<T = null> {
     return { response };
   }
 
-  getPathWithId(id?: number) {
+  getPathWithId(id?: string) {
     return id ? `${this.endpoint}/${id}` : this.endpoint;
   }
 }

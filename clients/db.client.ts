@@ -16,6 +16,20 @@ export class DBClient<
     this.tableName = tableName;
   }
 
+  async insert(data: Omit<T, "id">) {
+    const keys = Object.keys(data);
+    const values = Object.values(data);
+
+    const query = `INSERT INTO ${this.tableName} (${keys.join(", ")}) VALUES (${values.map((value) => "?").join(", ")})`;
+    const result = await this.pool.query(query, values);
+    logDbQueryInfo(query, values, result[0]);
+
+    if (result[0] && "insertId" in result[0]) {
+      return result[0].insertId;
+    }
+    return null;
+  }
+
   async getById(id: number): Promise<T | null> {
     if (isNaN(id)) {
       throw new Error("Invalid id");

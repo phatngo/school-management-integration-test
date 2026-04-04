@@ -1,4 +1,4 @@
-import { When, Then } from "@cucumber/cucumber";
+import { Given, When, Then } from "@cucumber/cucumber";
 import { TEACHER_RESPONSE_SCHEMA_PATH } from "../../constants/api.constants";
 import {
   TeacherRequestBody,
@@ -29,7 +29,8 @@ When(
   },
 );
 
-Then("I see the teacher is created successfully", async function () {
+Then("I see the teacher is created successfully with the following profile:", async function (teacherProfile: { rawTable: [][] }) {
+  const expectedData = parseDataTable(teacherProfile.rawTable);
   assertCommon(
     TEACHER_RESPONSE_SCHEMA_PATH,
     this.addedTeacher.response,
@@ -38,11 +39,10 @@ Then("I see the teacher is created successfully", async function () {
 
   const responseBody: ResponseBody<TeacherResponseData> =
     this.addedTeacher.response.body;
-  const requestbody: TeacherRequestBody = this.addedTeacher.body;
 
   // Compare data in response with request body
   expect(responseBody.code).to.equal(RESPONSE_CODE.CREATED);
-  expect(responseBody.data.name).to.equal(requestbody.name);
+  expect(responseBody.data.name).to.equal(expectedData.name);
   expect(responseBody.data.id).to.be.a("number");
 
   // Check if the teacher is actually added in the database
@@ -50,7 +50,7 @@ Then("I see the teacher is created successfully", async function () {
     responseBody.data.id,
   );
 
-  expect(teacherDataInDb.name).to.equal(responseBody.data.name);
+  expect(teacherDataInDb.name).to.equal(expectedData.name);
   expect(teacherDataInDb.id).to.equal(responseBody.data.id);
 });
 

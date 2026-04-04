@@ -6,40 +6,37 @@ import {
 } from "../../utils/api.response.assertion.utils";
 import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
 import { TeacherApi } from "../../api/teacher.api";
+import { expect } from "chai";
 
-When("I delete the added teacher", async function () {
+// Note: A teacher must be created before running the deletion steps.
+// This is typically done using a "Given" step in the feature file, for example:
+// Given a teacher with the following profile has existed in the system:
+//   | name | Phat |
+
+When("I delete the existing teacher", async function () {
   const teacher = new TeacherApi(this.currentUser);
-  const teacherId = getAddedTeacherId(this);
-  this.deleteTeacher = await teacher.delete(teacherId);
+  const seededTeacherId = this.seededTeacher.id;
+  this.deleteTeacher = await teacher.delete(seededTeacherId);
 });
 
-When("I delete the teacher with id: {int}", async function (id: number) {
+When("I delete the teacher with id: {string}", async function (id: string) {
   const teacher = new TeacherApi(this.currentUser);
   this.deleteTeacher = await teacher.delete(id);
 });
 
 Then("I see the teacher is deleted successfully", async function () {
-  assertCommon(
-    null,
-    this.deleteTeacher.response,
-    HTTP_STATUS.NO_CONTENT,
-  );
+  assertCommon(null, this.deleteTeacher.response, HTTP_STATUS.NO_CONTENT);
 
   // Check if the teacher is actually removed from the database
-  const teacherId = getAddedTeacherId(this);
+  const seededTeacherId = this.seededTeacher.id;
 
-  const removedTeacherData = await this.teacherDb.getById(teacherId);
-
-  if (removedTeacherData) {
-    throw new Error(
-      `Teacher with id ${teacherId} still exists in the database after deletion`,
-    );
-  }
+  const removedTeacherData = await this.teacherDb.getById(seededTeacherId);
+  expect(removedTeacherData).to.be.null;
 });
 
 Then(
-  "I fail to delete the teacher as the teacher with {int} is not found",
-  async function (id: number) {
+  "I fail to delete the teacher as the teacher with {string} is not found",
+  async function (id: string) {
     return assertErrorResponse(
       this.deleteTeacher.response,
       HTTP_STATUS.NOT_FOUND,

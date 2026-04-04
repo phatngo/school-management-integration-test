@@ -1,11 +1,25 @@
 Feature: Add a teacher
 
-  Scenario: Add a teacher successfully
+  Scenario Outline: Add a teacher successfully
     When I add a new teacher with the following profile:
-      | name | David |
-    Then I see the teacher is created successfully
+      | name | <name> |
+    Then I see the teacher is created successfully with the following profile:
+      | name | <name> |
 
-  Scenario: Failed to add a teacher with an empty name
+    Examples:
+      | name  |
+      | David |
+
+  Scenario Outline: Failed to add a teacher with an invalid names
     When I add a new teacher with the following profile:
-      | name | <empty> |
+      | name | <inValidName> |
     Then I fail to add the teacher as name cannot be empty
+
+    Examples:
+      | inValidName |
+      | empty       |
+      # Unsupported for now, to be done later
+      # | null        |
+      # | true        |
+      # |           1 |
+      # | undefined   |

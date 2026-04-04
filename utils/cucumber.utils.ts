@@ -2,7 +2,7 @@ import { TeacherApi } from "../api/teacher.api";
 
 export function parseDataTable(
   rawTable: any,
-): Record<string, string | number | boolean> {
+): Record<string, string | number | boolean | null | undefined> {
   return Object.fromEntries(
     (rawTable as string[][]).map(([key, value]) => [
       key,
@@ -11,10 +11,12 @@ export function parseDataTable(
   );
 }
 
-function convertDataTableValue(value: string): string | number | boolean {
-  if (value === "<empty>") return "";
+function convertDataTableValue(value: string): string | number | boolean | null | undefined {
+  if (value === "empty") return "";
   if (value === "true") return true;
   if (value === "false") return false;
+  if (value === "null") return null;
+  if (value === "undefined") return undefined;
 
   const numeric = Number(value);
   if (!isNaN(numeric) && value.trim() !== "") return numeric;

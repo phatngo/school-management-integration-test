@@ -1,24 +1,42 @@
 Feature: View a single teacher
 
-  Background: Add a teacher successfully
-    Given I add a new teacher with the following profile:
-      | name | Julian |
-
-  Scenario: Modify a teacher successfully
-    When I modify the added teacher with the following data:
-      | name | Mr. Johnson |
-    Then I see the teacher is modified successfully
-
-  Scenario Outline: Failed to modify a non-existent teacher
-    When I modify the teacher with id: <id> and the following data:
-      | name | Mr. Johnson |
-    Then I fail to modify the teacher as the teacher with <id> is not found
+  Scenario Outline: Modify a teacher successfully
+    Given a teacher with the following profile has existed in the system:
+      | name | Phat |
+    When I modify the existing teacher with the following data:
+      | name | <modifiedName> |
+    Then I see the teacher is modified successfully with the following data:
+      | name | <modifiedName> |
 
     Examples:
-      | id |
-      | -1 |
+      | modifiedName |
+      | Johnson      |
 
-  Scenario: Failed to modify a teacher with an empty name
-    When I modify the added teacher with the following data:
-      | name | <empty> |
+  Scenario Outline: Failed to modify a teacher with an invalid id
+    When I modify the teacher with id: "<id>" and the following data:
+      | name | Hendrik |
+    Then I fail to modify the teacher as the teacher with "<id>" is not found
+
+    Examples:
+      | id    |
+      |    -1 |
+      | true  |
+      | false |
+      | null  |
+      | empty |
+
+  Scenario Outline: Failed to modify a teacher with an invalid names
+    Given a teacher with the following profile has existed in the system:
+      | name | Phat |
+    When I modify the existing teacher with the following data:
+      | name | <inValidName> |
     Then I fail to modify the teacher as name cannot be empty
+
+    Examples:
+      | inValidName |
+      | empty       |
+      # Unsupported for now, to be done later
+      # | null        |
+      # | true        |
+      # |           1 |
+      # | undefined   |
