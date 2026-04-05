@@ -13,7 +13,7 @@ Follow the instruction outlined in README.md in [school-management-backend-app](
 To run all tests, you can use the following command:
 
 ```bash
-npm run test -- --tags @your-tag
+npm run test
 ```
 
 ### Run tests with tags
