@@ -43,12 +43,25 @@ export class DBClient<
     return data;
   }
 
-  async getList(limit: number, offset: number): Promise<T[]> {
-    if (isNaN(limit) || isNaN(offset)) {
-      throw new Error("Invalid limit or offset");
+  async getList(limit?: number, offset?: number): Promise<T[]> {
+    let query = `SELECT * FROM ${this.tableName}`;
+    const params: number[] = [];
+
+    if (limit !== undefined) {
+      if (isNaN(limit) || limit <= 0) {
+        throw new Error("Invalid limit");
+      }
+      query += ` LIMIT ?`;
+      params.push(limit);
     }
-    const query = `SELECT * FROM ${this.tableName} LIMIT ? OFFSET ?`;
-    const params = [limit, offset];
+
+    if (offset !== undefined) {
+      if (isNaN(offset) || offset < 0) {
+        throw new Error("Invalid offset");
+      }
+      query += ` OFFSET ?`;
+      params.push(offset);
+    }
 
     const [data] = await this.pool.query(query, params);
     logDbQueryInfo(query, params, data);

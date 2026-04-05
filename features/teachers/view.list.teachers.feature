@@ -25,6 +25,32 @@ Feature: View list of teachers
       |    10 |
       |   100 |
 
+  Scenario: Failed to view the list of teachers with invalid limits
+    When I view the list of teachers with the following options:
+      | limit | <limit> |
+    Then I fail to view the list of teachers due to invalid limits
+
+    Examples:
+      | limit |
+      |     0 |
+      |    -1 |
+      | true  |
+      | null  |
+      | abc   |
+
+  Scenario: Failed to view the list of teachers with invalid page numbers
+    When I view the list of teachers with the following options:
+      | page | <page> |
+    Then I fail to view the list of teachers due to invalid page number
+
+    Examples:
+      | page |
+      |     0 |
+      |    -1 |
+      | true  |
+      | null  |
+      | abc   |
+
   Scenario Outline: View pages of teachers with all valid options successfully
     When I view the list of teachers with the following options:
       | page  | <page>  |
