@@ -19,8 +19,8 @@ When(
   "I add a new teacher with the following profile:",
   async function (teacherProfile: { rawTable: [][] }) {
     const data = parseDataTable(teacherProfile.rawTable);
-    const payload: TeacherRequestBody = {
-      name: String(data.name),
+    const payload = {
+      name: data.name,
     };
     const teacher = new TeacherApi(this.currentUser);
     const addedTeacher: RequestInfo<TeacherRequestBody> =
@@ -54,11 +54,11 @@ Then("I see the teacher is created successfully with the following profile:", as
   expect(teacherDataInDb.id).to.equal(responseBody.data.id);
 });
 
-Then("I fail to add the teacher as name cannot be empty", async function () {
+Then("I fail to add the teacher as name is invalid", async function () {
   return assertErrorResponse(
     this.addedTeacher.response,
     HTTP_STATUS.BAD_REQUEST,
     RESPONSE_CODE.BAD_REQUEST,
-    `name should not be empty!`,
+    `invalid name!`,
   );
 });

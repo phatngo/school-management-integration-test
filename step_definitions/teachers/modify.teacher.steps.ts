@@ -18,7 +18,7 @@ When(
     const teacher = new TeacherApi(this.currentUser);
     const teacherId = this.seededTeacher.id;
     const payload = {
-      name: String(data.name),
+      name: data.name,
     };
     const modifiedTeacher: RequestInfo<TeacherRequestBody> = await teacher.put(
       teacherId,
@@ -91,11 +91,11 @@ Then(
   },
 );
 
-Then("I fail to modify the teacher as name cannot be empty", async function () {
+Then("I fail to modify the teacher as name is invalid", async function () {
   return assertErrorResponse(
     this.modifiedTeacher.response,
     HTTP_STATUS.BAD_REQUEST,
     RESPONSE_CODE.BAD_REQUEST,
-    `name should not be empty!`,
+    `invalid name!`,
   );
 });

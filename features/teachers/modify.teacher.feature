@@ -30,13 +30,11 @@ Feature: View a single teacher
       | name | Phat |
     When I modify the existing teacher with the following data:
       | name | <inValidName> |
-    Then I fail to modify the teacher as name cannot be empty
+    Then I fail to modify the teacher as name is invalid
 
     Examples:
       | inValidName |
       | empty       |
-      # Unsupported for now, to be done later
-      # | null        |
-      # | true        |
-      # |           1 |
-      # | undefined   |
+      | null        |
+      | true        |
+      |           1 |

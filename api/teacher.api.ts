@@ -4,7 +4,7 @@ import {
   TeacherRequestBody,
 } from "../types/api/teacher.api.types";
 
-export class TeacherApi extends ApiClient<TeacherRequestBody> {
+export class TeacherApi extends ApiClient<any> {
   constructor(user?: { username: string; apiKey: string }) {
     super("/teachers", user);
   }

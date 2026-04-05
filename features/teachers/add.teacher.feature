@@ -13,13 +13,11 @@ Feature: Add a teacher
   Scenario Outline: Failed to add a teacher with an invalid names
     When I add a new teacher with the following profile:
       | name | <inValidName> |
-    Then I fail to add the teacher as name cannot be empty
+    Then I fail to add the teacher as name is invalid
 
     Examples:
       | inValidName |
       | empty       |
-      # Unsupported for now, to be done later
-      # | null        |
-      # | true        |
-      # |           1 |
-      # | undefined   |
+      | null        |
+      | true        |
+      |           1 |
