@@ -1,8 +1,20 @@
-# pactum-cucumber-boilerplate
+# school-management-integration-test
 
-Boilerplate project to run REST API tests with [Cucumber](https://cucumber.io) and [PactumJS](https://pactumjs.github.io)
+An integration test project for [school-management-backend-app](https://github.com/phatngo/school-management-backend-app)
 
 ## Setup
+
+### Set up the production app
+
+Follow the instruction outlined in README.md in [school-management-backend-app](https://github.com/phatngo/school-management-backend-app)
+
+### Run all tests
+
+To run all tests, you can use the following command:
+
+```bash
+npm run test -- --tags @your-tag
+```
 
 ### Run tests with tags
 
