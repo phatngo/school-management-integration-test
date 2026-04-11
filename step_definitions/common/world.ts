@@ -2,10 +2,16 @@ import { setWorldConstructor, World, IWorldOptions } from "@cucumber/cucumber";
 import config from "config";
 import { UserConfigPaths } from "../../constants/users.constants";
 import { TeacherDb } from "../../db/teacher.db";
+import { ClassDb } from "../../db/class.db";
+import { TeacherDBSchema } from "../../types/db/teacher.db.types";
+import { RequestInfo } from "../../types/api/common.api.types";
 
 export class CustomWorld extends World {
   currentUser: Record<string, string>;
   teacherDb: TeacherDb;
+  classDb: ClassDb;
+  addedClass: RequestInfo | undefined = undefined;
+  seededTeacher: TeacherDBSchema | undefined;
 
   constructor(options: IWorldOptions) {
     super(options);
@@ -13,6 +19,9 @@ export class CustomWorld extends World {
       UserConfigPaths.DEFAULT_USER,
     );
     this.teacherDb = new TeacherDb();
+    this.classDb = new ClassDb();
+    this.addedClass = undefined;
+    this.seededTeacher = undefined;
   }
 
   chooseUser(user: string) {
@@ -25,6 +34,7 @@ export class CustomWorld extends World {
 
   async closeDbs() {
     await this.teacherDb.close();
+    await this.classDb.close();
   }
 }
 

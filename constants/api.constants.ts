@@ -4,6 +4,9 @@ export const TEACHER_RESPONSE_SCHEMA_PATH =
 export const LIST_TEACHERS_RESPONSE_SCHEMA_PATH =
   "schemas/list.teachers.api.response.schema.json";
 
+export const CLASS_RESPONSE_SCHEMA_PATH =
+  "schemas/single.class.api.response.schema.json";
+
 export const HTTP_STATUS = {
   CREATED: 201,
   NO_CONTENT: 204,

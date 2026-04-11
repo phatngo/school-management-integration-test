@@ -1,36 +1,31 @@
-import { TeacherApi } from "../api/teacher.api";
+import { IWorld } from "@cucumber/cucumber";
 
 export function parseDataTable(
   rawTable: any,
+  world: IWorld | null = null,
 ): Record<string, string | number | boolean | null | undefined> {
   return Object.fromEntries(
     (rawTable as string[][]).map(([key, value]) => [
       key,
-      convertDataTableValue(value),
+      convertDataTableValue(value, world),
     ]),
   );
 }
 
-function convertDataTableValue(value: string): string | number | boolean | null | undefined {
+function convertDataTableValue(
+  value: string,
+  world: IWorld | null = null,
+): string | number | boolean | null | undefined {
   if (value === "empty") return "";
   if (value === "true") return true;
   if (value === "false") return false;
   if (value === "null") return null;
   if (value === "undefined") return undefined;
+  if (value === "{exisitingTeacherId}")
+    return world ? world.seededTeacher.id : undefined;
 
   const numeric = Number(value);
   if (!isNaN(numeric) && value.trim() !== "") return numeric;
 
   return value;
-}
-
-export function getTeacherService(currentUser: {
-  username: string;
-  apiKey: string;
-}): TeacherApi {
-  return new TeacherApi(currentUser);
-}
-
-export function getAddedTeacherId(world: any): number {
-  return world.addedTeacher?.response.body.data.id ?? -1;
 }

@@ -1,5 +1,4 @@
 import { When, Then } from "@cucumber/cucumber";
-import { getAddedTeacherId } from "../../utils/cucumber.utils";
 import {
   assertCommon,
   assertErrorResponse,
