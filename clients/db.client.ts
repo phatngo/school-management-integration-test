@@ -43,6 +43,19 @@ export class DBClient<
     return data;
   }
 
+  async getNotById(id: number): Promise<T[] | null> {
+    if (isNaN(id)) {
+      throw new Error("Invalid id");
+    }
+    const query = `SELECT * FROM ${this.tableName} WHERE id <> ?`;
+    const params = [id];
+
+    const [rows] = await this.pool.query(query, params);
+    const data = (rows as T[]).length > 0 ? (rows as T[]) : null;
+    logDbQueryInfo(query, params, data);
+    return data;
+  }
+
   async getList(limit?: number, offset?: number): Promise<T[]> {
     let query = `SELECT * FROM ${this.tableName}`;
     const params: number[] = [];

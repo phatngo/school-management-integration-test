@@ -5,6 +5,7 @@ import { TeacherDb } from "../../db/teacher.db";
 import { ClassDb } from "../../db/class.db";
 import { TeacherDBSchema } from "../../types/db/teacher.db.types";
 import { RequestInfo } from "../../types/api/common.api.types";
+import { ClassDBSchema } from "../../types/db/class.db.types";
 
 export class CustomWorld extends World {
   currentUser: Record<string, string>;
@@ -12,6 +13,7 @@ export class CustomWorld extends World {
   classDb: ClassDb;
   addedClass: RequestInfo | undefined = undefined;
   seededTeacher: TeacherDBSchema | undefined;
+  seededClass: ClassDBSchema | undefined;
 
   constructor(options: IWorldOptions) {
     super(options);
@@ -22,6 +24,7 @@ export class CustomWorld extends World {
     this.classDb = new ClassDb();
     this.addedClass = undefined;
     this.seededTeacher = undefined;
+    this.seededClass = undefined;
   }
 
   chooseUser(user: string) {
@@ -30,6 +33,19 @@ export class CustomWorld extends World {
       throw new Error(`User "${user}" is not defined in the configuration.`);
     }
     this.currentUser = userConfig;
+  }
+
+  async getDuplicateClassName() {
+    if (!this.seededClass) {
+      throw new Error("No seeded class found to get duplicate class name.");
+    }
+    const data = await this.classDb.getNotById(this.seededClass.id);
+
+    if (data && data.length > 0) {
+      return data[0].name;
+    } else {
+      return null;
+    }
   }
 
   async closeDbs() {

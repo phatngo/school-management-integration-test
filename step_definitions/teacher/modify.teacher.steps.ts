@@ -14,7 +14,7 @@ import { RequestInfo } from "../../types/api/common.api.types";
 When(
   "I modify the existing teacher with the following data:",
   async function (teacherProfile: { rawTable: [][] }) {
-    const data = parseDataTable(teacherProfile.rawTable);
+    const data = await parseDataTable(teacherProfile.rawTable);
     const teacher = new TeacherApi(this.currentUser);
     const teacherId = this.seededTeacher.id;
     const payload = {
@@ -31,7 +31,7 @@ When(
 When(
   "I modify the teacher with id: {string} and the following data:",
   async function (teacherId: string, teacherProfile: { rawTable: [][] }) {
-    const data = parseDataTable(teacherProfile.rawTable);
+    const data = await parseDataTable(teacherProfile.rawTable);
     const teacher = new TeacherApi(this.currentUser);
 
     const payload = {
@@ -49,7 +49,7 @@ When(
 Then(
   "I see the teacher is modified successfully with the following data:",
   async function (teacherProfile: { rawTable: [][] }) {
-    const expectedData = parseDataTable(teacherProfile.rawTable);
+    const expectedData = await parseDataTable(teacherProfile.rawTable);
     assertCommon(
       TEACHER_RESPONSE_SCHEMA_PATH,
       this.modifiedTeacher.response,

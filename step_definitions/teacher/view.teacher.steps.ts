@@ -29,7 +29,7 @@ When(
 Then(
   "I see the existing teacher is fectched successfully with the following profile:",
   async function (teacherProfile: { rawTable: string }) {
-    const expectedData = parseDataTable(teacherProfile.rawTable);
+    const expectedData = await parseDataTable(teacherProfile.rawTable);
     assertCommon(
       TEACHER_RESPONSE_SCHEMA_PATH,
       this.getTeacher.response,

@@ -18,7 +18,7 @@ import { ResponseBody, RequestInfo } from "../../types/api/common.api.types";
 When(
   "I add a new teacher with the following profile:",
   async function (teacherProfile: { rawTable: [][] }) {
-    const data = parseDataTable(teacherProfile.rawTable);
+    const data = await parseDataTable(teacherProfile.rawTable);
     const payload = {
       name: data.name,
     };
@@ -32,7 +32,7 @@ When(
 Then(
   "I see the teacher is created successfully with the following profile:",
   async function (teacherProfile: { rawTable: [][] }) {
-    const expectedData = parseDataTable(teacherProfile.rawTable);
+    const expectedData = await parseDataTable(teacherProfile.rawTable);
     assertCommon(
       TEACHER_RESPONSE_SCHEMA_PATH,
       this.addedTeacher.response,

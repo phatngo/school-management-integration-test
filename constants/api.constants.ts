@@ -13,6 +13,7 @@ export const HTTP_STATUS = {
   OK: 200,
   NOT_FOUND: 404,
   BAD_REQUEST: 400,
+  CONFLICT: 409
 };
 
 export const HTTP_METHOD = {
@@ -28,4 +29,5 @@ export const RESPONSE_CODE = {
   NOT_FOUND: "NOT_FOUND",
   BAD_REQUEST: "BAD_REQUEST",
   NO_CONTENT: "NO_CONTENT",
+  CONFLICT: "CONFLICT"
 };

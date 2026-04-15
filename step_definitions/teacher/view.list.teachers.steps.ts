@@ -14,7 +14,7 @@ When(
   "I view the list of teachers with the following options:",
   async function (listOptions: { rawTable: [][] }) {
     const teacher = new TeacherApi(this.currentUser);
-    const data = parseDataTable(listOptions.rawTable) as ListOptions;
+    const data = await parseDataTable(listOptions.rawTable) as ListOptions;
     const getListTeachers: RequestInfo = await teacher.list(data);
     this.getListTeachers = getListTeachers;
   },
@@ -58,7 +58,7 @@ Then(
     const listAllTeachers = await this.teacherDb.getList();
     expect(responseBody.data.total).to.equal(listAllTeachers.length);
 
-    if (listAllTeachers.length % offset === 0) {
+    if (page * limit >= listAllTeachers.length) {
       expect(responseBody.data.next_page).to.be.null;
     } else {
       expect(responseBody.data.next_page).to.equal(page + 1);
