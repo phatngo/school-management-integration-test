@@ -1,0 +1,51 @@
+{
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string"
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "number"
+        },
+        "to": {
+          "type": "number"
+        },
+        "previous_page": {
+          "type": "null"
+        },
+        "next_page": {
+          "type": "number"
+        },
+        "total": {
+          "type": "number"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "name": {
+                "type": "string"
+              },
+              "teacher_id": {
+                "type": "number"
+              },
+              "class_type": {
+                "type": "string"
+              }
+            },
+            "required": ["id", "name", "teacher_id", "class_type"]
+          }
+        }
+      },
+      "required": ["from", "to", "previous_page", "next_page", "total", "items"]
+    }
+  },
+  "required": ["code", "data"]
+}
