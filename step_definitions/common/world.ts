@@ -3,6 +3,7 @@ import config from "config";
 import { UserConfigPaths } from "../../constants/users.constants";
 import { TeacherDb } from "../../db/teacher.db";
 import { ClassDb } from "../../db/class.db";
+import { StudentDb } from "../../db/student.db";
 import { TeacherDBSchema } from "../../types/db/teacher.db.types";
 import { RequestInfo } from "../../types/api/common.api.types";
 import { ClassDBSchema } from "../../types/db/class.db.types";
@@ -11,6 +12,7 @@ export class CustomWorld extends World {
   currentUser: Record<string, string>;
   teacherDb: TeacherDb;
   classDb: ClassDb;
+  studentDb: StudentDb;
   addedClass: RequestInfo | undefined = undefined;
   seededTeacher: TeacherDBSchema | undefined;
   seededClass: ClassDBSchema | undefined;
@@ -22,6 +24,7 @@ export class CustomWorld extends World {
     );
     this.teacherDb = new TeacherDb();
     this.classDb = new ClassDb();
+    this.studentDb = new StudentDb();
     this.addedClass = undefined;
     this.seededTeacher = undefined;
     this.seededClass = undefined;
@@ -51,6 +54,7 @@ export class CustomWorld extends World {
   async closeDbs() {
     await this.teacherDb.close();
     await this.classDb.close();
+    await this.studentDb.close();
   }
 }
 

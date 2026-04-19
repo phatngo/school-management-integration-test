@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string"
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "phone_number": {
+          "type": "string"
+        },
+        "class_id": {
+          "type": "number"
+        }
+      },
+      "required": ["id", "name", "phone_number", "class_id"]
+    }
+  },
+  "required": ["code", "data"]
+}

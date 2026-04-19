@@ -24,11 +24,20 @@ async function convertDataTableValue(
   if (value === "undefined") return undefined;
   if (value === "{exisitingTeacherId}")
     return world ? world.seededTeacher.id : undefined;
+  if (value === "{exisitingClassId}")
+    return world ? world.seededClass.id : undefined;
   if (value === "{duplicateClassName}")
     return world ? await world.getDuplicateClassName() : undefined;
+
+  if (isPhoneNumber(value)) return value;
 
   const numeric = Number(value);
   if (!isNaN(numeric) && value.trim() !== "") return numeric;
 
   return value;
+}
+
+function isPhoneNumber(value: string): boolean {
+  // Matches: +84..., 0..., or patterns with common phone formatting
+  return /^(\+\d{1,3}|0)\d{6,14}$/.test(value.trim());
 }
