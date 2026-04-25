@@ -3,6 +3,7 @@ import { CustomWorld } from "./world";
 import { TeacherDBSchema } from "../../types/db/teacher.db.types";
 import { parseDataTable } from "../../utils/cucumber.utils";
 import { ClassDBSchema } from "../../types/db/class.db.types";
+import { StudentDBSchema } from "../../types/db/student.db.types";
 
 Given(
   "I am authenticated as {string} user",
@@ -35,6 +36,20 @@ Given(
       this.seededClass = { id: insertId, ...data } as ClassDBSchema;
     } else {
       throw new Error("Failed to seed class data in the database");
+    }
+  },
+);
+
+// Used for seeding data in the database, not for making API calls
+Given(
+  "a student with the following information has existed in the system:",
+  async function (studentInfo: { rawTable: [][] }) {
+    const data = await parseDataTable(studentInfo.rawTable, this);
+    const insertId = await this.studentDb.insert(data);
+    if (insertId) {
+      this.seededStudent = { id: insertId, ...data } as StudentDBSchema;
+    } else {
+      throw new Error("Failed to seed student data in the database");
     }
   },
 );

@@ -19,7 +19,6 @@ When(
       studentProfile.rawTable,
       this,
     );
-    console.log("Parsed Student Profile:", parsedStudentProfile);
     const addStudent = await new StudentApi(this.currentUser).post(
       parsedStudentProfile,
     );

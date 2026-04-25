@@ -7,6 +7,7 @@ import { StudentDb } from "../../db/student.db";
 import { TeacherDBSchema } from "../../types/db/teacher.db.types";
 import { RequestInfo } from "../../types/api/common.api.types";
 import { ClassDBSchema } from "../../types/db/class.db.types";
+import { StudentDBSchema } from "../../types/db/student.db.types";
 
 export class CustomWorld extends World {
   currentUser: Record<string, string>;
@@ -16,6 +17,7 @@ export class CustomWorld extends World {
   addedClass: RequestInfo | undefined = undefined;
   seededTeacher: TeacherDBSchema | undefined;
   seededClass: ClassDBSchema | undefined;
+  seededStudent: StudentDBSchema | undefined;
 
   constructor(options: IWorldOptions) {
     super(options);
@@ -28,6 +30,7 @@ export class CustomWorld extends World {
     this.addedClass = undefined;
     this.seededTeacher = undefined;
     this.seededClass = undefined;
+    this.seededStudent = undefined;
   }
 
   chooseUser(user: string) {

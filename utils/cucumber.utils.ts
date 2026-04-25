@@ -24,7 +24,7 @@ async function convertDataTableValue(
   if (value === "undefined") return undefined;
   if (value === "{exisitingTeacherId}")
     return world ? world.seededTeacher.id : undefined;
-  if (value === "{exisitingClassId}")
+  if (value === "{existingClassId}")
     return world ? world.seededClass.id : undefined;
   if (value === "{duplicateClassName}")
     return world ? await world.getDuplicateClassName() : undefined;
@@ -33,7 +33,6 @@ async function convertDataTableValue(
 
   const numeric = Number(value);
   if (!isNaN(numeric) && value.trim() !== "") return numeric;
-
   return value;
 }
 
