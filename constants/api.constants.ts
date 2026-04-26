@@ -12,6 +12,9 @@ export const LIST_CLASSES_RESPONSE_SCHEMA_PATH =
 
 export const STUDENT_RESPONSE_SCHEMA_PATH =
   "schemas/single.student.api.response.schema.json";
+
+export const LIST_STUDENTS_RESPONSE_SCHEMA_PATH =
+  "schemas/list.students.api.response.schema.json";
   
 export const HTTP_STATUS = {
   CREATED: 201,
