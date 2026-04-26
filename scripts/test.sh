@@ -19,7 +19,7 @@ esac
 done
 
 if [[ ${TAGS} ]]; then
-    node_modules/.bin/cucumber-js -p default -t "${TAGS}"
+    node_modules/.bin/cucumber-js -p default -t "${TAGS}" --publish-quiet
 else
-    node_modules/.bin/cucumber-js -p default
+    node_modules/.bin/cucumber-js -p default --publish-quiet
 fi

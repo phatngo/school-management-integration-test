@@ -1,4 +1,3 @@
-@focus
 Feature: Delete a student
 
   Scenario: Delete a student successfully

@@ -10,11 +10,11 @@ Feature: Add a student
     When I add a new student with the following profile:
       | name         | John               |
       | phone_number |       +84907055981 |
-      | class_id     | {exisitingClassId} |
+      | class_id     | {existingClassId} |
     Then I see the student is added successfully with the following profile:
       | name         | John               |
       | phone_number |       +84907055981 |
-      | class_id     | {exisitingClassId} |
+      | class_id     | {existingClassId} |
 
   Scenario Outline: Failed to add a student with invalid name
     Given a teacher with the following profile has existed in the system:
