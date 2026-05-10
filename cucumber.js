@@ -4,13 +4,13 @@ module.exports = {
     require: ["step_definitions/**/*.ts"],
     requireModule: ["ts-node/register"],
     format: [
-      `html:test-report.html`,
-      "progress-bar",
+      'progress-bar',
+      'html:test-report.html'
     ],
-    formatOptions: {
-      html: {
-        externalAttachments: true,
-      },
-    },
+    // formatOptions: {
+    //   html: {
+    //     externalAttachments: true,
+    //   },
+    // },
   },
 };
