@@ -1,3 +1,4 @@
+@teachers
 Feature: Add a teacher
 
   Scenario Outline: Add a teacher successfully

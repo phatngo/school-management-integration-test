@@ -1,4 +1,3 @@
-@focus
 Feature: Modify a student
 
   Background:

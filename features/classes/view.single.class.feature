@@ -1,3 +1,4 @@
+@class
 Feature: View a class
 
   Scenario: View an existing class successfully

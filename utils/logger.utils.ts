@@ -14,15 +14,16 @@ export function logScenarioName(scenarioName: string) {
 export function logApiRequestInfo<T = null>(
   method: string,
   endpoint: string,
-  pactResponse: PactResponse,
-  payload?: T,
+  actualResponse: number,
+  actualResponseBody: any,
+  body?: T,
 ) {
   const apiLog: ApiLog = {
     method,
     endpoint,
-    responseCode: pactResponse.statusCode,
-    responseBody: pactResponse.body,
-    payload: payload ? payload : null,
+    responseCode: actualResponse,
+    responseBody: actualResponseBody,
+    payload: body ? body : null,
   };
   logger.debug("API Request Info:", `\t${formatLog(apiLog)}`);
 }

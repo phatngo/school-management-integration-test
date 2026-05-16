@@ -1,3 +1,4 @@
+@class
 Feature: View list of classes
 
   Scenario: View list of classes

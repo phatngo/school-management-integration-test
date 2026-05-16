@@ -1,3 +1,4 @@
+@teachers
 Feature: Delete a single teacher
 
   Scenario: Delete a teacher successfully

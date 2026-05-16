@@ -14,8 +14,8 @@ Before((scenario) => {
 After(async function (this: CustomWorld) {
   this.seededTeacher &&
     (await this.teacherDb.deleteById(this.seededTeacher.id));
-  this.addedClass?.response.statusCode === HTTP_STATUS.CREATED &&
-    (await this.classDb.deleteById(this.addedClass.response.body.data.id));
+  this.addedClass?.actualResponseCode === HTTP_STATUS.CREATED &&
+    (await this.classDb.deleteById(this.addedClass.actualResponseBody.data.id));
   this.seededClass && (await this.classDb.deleteById(this.seededClass.id));
   await this.closeDbs();
 });

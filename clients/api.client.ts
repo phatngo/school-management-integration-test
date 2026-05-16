@@ -1,9 +1,9 @@
 import config from "config";
 import { spec } from "pactum";
 import {
-  RequestInfo,
   PactResponse,
   ListOptions,
+  ParsedApiData,
 } from "../types/api/common.api.types";
 import { logApiRequestInfo } from "../utils/logger.utils";
 import { HTTP_METHOD } from "../constants/api.constants";
@@ -47,55 +47,95 @@ export class ApiClient<T = null> {
     return s;
   }
 
-  async post(body: T): Promise<RequestInfo<T>> {
-    const response: PactResponse = await this.createSpec()
+  async post(body: T): Promise<ParsedApiData<T>> {
+    const pactResponse: PactResponse = await this.createSpec()
       .post(`${this.baseUrl}${this.endpoint}`)
       .withBody(body);
-    logApiRequestInfo(HTTP_METHOD.POST, this.endpoint, response, body);
-    return { body, response };
+    const parsedApiData = this.getParsedApiData(pactResponse);
+    logApiRequestInfo(
+      HTTP_METHOD.POST,
+      this.endpoint,
+      parsedApiData.actualResponseCode,
+      parsedApiData.actualResponseBody,
+      body,
+    );
+    return parsedApiData;
   }
 
-  async put(id: string, body: T): Promise<RequestInfo<T>> {
+  async put(id: string, body: T): Promise<ParsedApiData<T>> {
     const path = this.getPathWithId(id);
-    const response: PactResponse = await this.createSpec()
+    const pactResponse: PactResponse = await this.createSpec()
       .put(`${this.baseUrl}${path}`)
       .withBody(body);
-    logApiRequestInfo(HTTP_METHOD.PUT, path, response, body);
-    return { body, response };
+    const parsedApiData = this.getParsedApiData(pactResponse);
+    logApiRequestInfo(
+      HTTP_METHOD.PUT,
+      path,
+      parsedApiData.actualResponseCode,
+      parsedApiData.actualResponseBody,
+      body,
+    );
+    return parsedApiData;
   }
 
-  async get(id?: string): Promise<RequestInfo<null>> {
+  async get(id?: string): Promise<ParsedApiData<T>> {
     const path = this.getPathWithId(id);
-    const response: PactResponse = await this.createSpec().get(
+    const pactResponse: PactResponse = await this.createSpec().get(
       `${this.baseUrl}${path}`,
     );
-    logApiRequestInfo(HTTP_METHOD.GET, path, response);
-    return { response };
+    const parsedApiData = this.getParsedApiData(pactResponse);
+    logApiRequestInfo(
+      HTTP_METHOD.GET,
+      path,
+      parsedApiData.actualResponseCode,
+      parsedApiData.actualResponseBody,
+    );
+    return parsedApiData;
   }
 
-  async list(params?: ListOptions): Promise<RequestInfo<null>> {
+  async list(params?: ListOptions): Promise<ParsedApiData<T>> {
     const path = params
       ? `${this.endpoint}?${Object.entries(params)
           .map(([key, value]) => `${key}=${value}`)
           .join("&")}`
       : this.endpoint;
-    const response: PactResponse = await this.createSpec().get(
+    const pactResponse: PactResponse = await this.createSpec().get(
       `${this.baseUrl}${path}`,
     );
-    logApiRequestInfo(HTTP_METHOD.GET, path, response);
-    return { params, response };
+    const parsedApiData = this.getParsedApiData(pactResponse);
+    logApiRequestInfo(
+      HTTP_METHOD.GET,
+      path,
+      parsedApiData.actualResponseCode,
+      parsedApiData.actualResponseBody,
+    );
+    return parsedApiData;
   }
 
-  async delete(id?: string): Promise<RequestInfo<null>> {
+  async delete(id?: string): Promise<ParsedApiData<T>> {
     const path = this.getPathWithId(id);
-    const response: PactResponse = await this.createSpec().delete(
+    const pactResponse: PactResponse = await this.createSpec().delete(
       `${this.baseUrl}${path}`,
     );
-    logApiRequestInfo(HTTP_METHOD.DELETE, path, response);
-    return { response };
+    const parsedApiData = this.getParsedApiData(pactResponse);
+    logApiRequestInfo(
+      HTTP_METHOD.DELETE,
+      path,
+      parsedApiData.actualResponseCode,
+      parsedApiData.actualResponseBody,
+    );
+    return parsedApiData;
   }
 
   getPathWithId(id?: string) {
     return id ? `${this.endpoint}/${id}` : this.endpoint;
+  }
+
+  getParsedApiData(response: PactResponse): ParsedApiData<T> {
+    return {
+      actualResponseCode: response.statusCode,
+      actualResponseHeaders: response.headers,
+      actualResponseBody: response.body,
+    };
   }
 }

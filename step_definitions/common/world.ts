@@ -5,7 +5,7 @@ import { TeacherDb } from "../../db/teacher.db";
 import { ClassDb } from "../../db/class.db";
 import { StudentDb } from "../../db/student.db";
 import { TeacherDBSchema } from "../../types/db/teacher.db.types";
-import { RequestInfo } from "../../types/api/common.api.types";
+import { ParsedApiData } from "../../types/api/common.api.types";
 import { ClassDBSchema } from "../../types/db/class.db.types";
 import { StudentDBSchema } from "../../types/db/student.db.types";
 
@@ -14,7 +14,7 @@ export class CustomWorld extends World {
   teacherDb: TeacherDb;
   classDb: ClassDb;
   studentDb: StudentDb;
-  addedClass: RequestInfo | undefined = undefined;
+  addedClass: ParsedApiData | undefined = undefined;
   seededTeacher: TeacherDBSchema | undefined;
   seededClass: ClassDBSchema | undefined;
   seededStudent: StudentDBSchema | undefined;

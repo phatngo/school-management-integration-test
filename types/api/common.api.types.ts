@@ -2,13 +2,11 @@ import { spec } from "pactum";
 
 export type PactResponse = Awaited<ReturnType<ReturnType<typeof spec>["toss"]>>;
 
-export type RequestInfo<T = any> = {
+export type ParsedApiData<T = any> = {
   body?: T;
-  params?: {
-    page?: string;
-    limit?: string;
-  };
-  response: PactResponse;
+  actualResponseCode: number;
+  actualResponseBody: T;
+  actualResponseHeaders: Record<string, string>;
 };
 
 export type ApiLog = {
@@ -22,6 +20,11 @@ export type ApiLog = {
 export type ResponseBody<T> = {
   code: number;
   data: T;
+};
+
+export type ErrorResponseBody = {
+  code: number;
+  error: string;
 };
 
 export type PaginatedResponseBody<T> = {

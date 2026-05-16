@@ -1,3 +1,4 @@
+@teachers
 Feature: View list of teachers
 
   Scenario: View the default list of teachers successfully with default options

@@ -1,4 +1,3 @@
-@focus
 Feature: View list of students
 
   Scenario: View the default list of students successfully

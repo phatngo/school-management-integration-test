@@ -1,3 +1,4 @@
+@teachers
 Feature: View a single teacher
 
   Scenario Outline: View a single teacher successfully

@@ -1,3 +1,4 @@
+@class
 Feature: Add a new class
 
   Scenario: Add a new class successfully

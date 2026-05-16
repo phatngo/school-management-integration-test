@@ -1,8 +1,5 @@
 import { When, Then } from "@cucumber/cucumber";
-import {
-  assertCommon,
-  assertErrorResponse,
-} from "../../utils/api.response.assertion.utils";
+import { assertErrorResponse } from "../../utils/api.response.assertion.utils";
 import { HTTP_STATUS, RESPONSE_CODE } from "../../constants/api.constants";
 import { TeacherApi } from "../../api/teacher.api";
 import { expect } from "chai";
@@ -24,7 +21,8 @@ When("I delete the teacher with id: {string}", async function (id: string) {
 });
 
 Then("I see the teacher is deleted successfully", async function () {
-  assertCommon(null, this.deleteTeacher.response, HTTP_STATUS.NO_CONTENT);
+  const { actualResponseCode } = this.deleteTeacher;
+  expect(actualResponseCode).to.equal(HTTP_STATUS.NO_CONTENT);
 
   // Check if the teacher is actually removed from the database
   const seededTeacherId = this.seededTeacher.id;
@@ -36,8 +34,10 @@ Then("I see the teacher is deleted successfully", async function () {
 Then(
   "I fail to delete the teacher as the teacher with {string} is not found",
   async function (id: string) {
+    const { actualResponseCode, actualResponseBody } = this.deleteTeacher;
     return assertErrorResponse(
-      this.deleteTeacher.response,
+      actualResponseCode,
+      actualResponseBody,
       HTTP_STATUS.NOT_FOUND,
       RESPONSE_CODE.NOT_FOUND,
       `teacher with id: ${id} is not found`,

@@ -1,3 +1,4 @@
+@class
 Feature: Modify a class
 
   Background:

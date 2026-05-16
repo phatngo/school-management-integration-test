@@ -6,8 +6,8 @@ import {
   STUDENT_RESPONSE_SCHEMA_PATH,
 } from "../../constants/api.constants";
 import {
-  assertCommon,
   assertErrorResponse,
+  assertResponseSchema,
 } from "../../utils/api.response.assertion.utils";
 import { expect } from "chai";
 import { StudentApi } from "../../api/student.api";
@@ -15,16 +15,12 @@ import { StudentApi } from "../../api/student.api";
 When("I view the existing student", async function () {
   const existingStudentId = this.seededStudent.id;
   const studentApi = new StudentApi(this.currentUser);
-
-  const getStudent = await studentApi.get(existingStudentId);
-  this.getStudent = getStudent;
+  this.getStudent = await studentApi.get(existingStudentId);
 });
 
 When("I view the student with id: {string}", async function (studentId: string) {
   const studentApi = new StudentApi(this.currentUser);
-
-  const getStudent = await studentApi.get(studentId);
-  this.getStudent = getStudent;
+  this.getStudent = await studentApi.get(studentId);
 });
 
 Then(
@@ -33,35 +29,33 @@ Then(
     // this = CustomWorld instance, which has properties like currentUser, studentDb, etc. that we can use in our step definitions.
     // Learn more in ./step_definitions/common/world.ts
     const expectedData = await parseDataTable(studentInfo.rawTable, this);
+    const { actualResponseCode, actualResponseBody } = this.getStudent;
 
-    assertCommon(
-      STUDENT_RESPONSE_SCHEMA_PATH,
-      this.getStudent.response,
-      HTTP_STATUS.OK,
-    );
+    expect(actualResponseCode).to.equal(HTTP_STATUS.OK);
+    assertResponseSchema(actualResponseBody, STUDENT_RESPONSE_SCHEMA_PATH);
 
-    const responseBody = this.getStudent.response.body;
+    expect(actualResponseBody.code).to.equal(RESPONSE_CODE.OK);
+    expect(actualResponseBody.data.id).to.equal(this.seededStudent.id);
+    expect(actualResponseBody.data.name).to.equal(expectedData.name);
+    expect(actualResponseBody.data.phone_number).to.equal(expectedData.phone_number);
+    expect(actualResponseBody.data.class_id).to.equal(expectedData.class_id);
 
-    expect(responseBody.code).to.equal(RESPONSE_CODE.OK);
-    expect(responseBody.data.id).to.equal(this.seededStudent.id);
-    expect(responseBody.data.name).to.equal(expectedData.name);
-    expect(responseBody.data.class_type).to.equal(expectedData.class_type);
-    expect(responseBody.data.teacher_id).to.equal(expectedData.teacher_id);
-
-    const studentDataInDb = await this.studentDb.getById(responseBody.data.id);
+    const studentDataInDb = await this.studentDb.getById(actualResponseBody.data.id);
 
     expect(studentDataInDb.id).to.equal(this.seededStudent.id);
     expect(studentDataInDb.name).to.equal(expectedData.name);
-    expect(studentDataInDb.class_type).to.equal(expectedData.class_type);
-    expect(studentDataInDb.teacher_id).to.equal(expectedData.teacher_id);
+    expect(studentDataInDb.phone_number).to.equal(expectedData.phone_number);
+    expect(studentDataInDb.class_id).to.equal(expectedData.class_id);
   },
 );
 
 Then(
   "I fail to see the student as the student with id: {string} is not found",
   async function (studentId: string) {
-    assertErrorResponse(
-      this.getStudent.response,
+    const { actualResponseCode, actualResponseBody } = this.getStudent;
+    return assertErrorResponse(
+      actualResponseCode,
+      actualResponseBody,
       HTTP_STATUS.NOT_FOUND,
       RESPONSE_CODE.NOT_FOUND,
       `student with id: ${studentId} is not found`,
