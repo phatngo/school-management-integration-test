@@ -5,20 +5,41 @@
       "type": "string"
     },
     "data": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer"
-          },
-          "name": {
-            "type": "string"
-          }
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "number"
         },
-        "required": ["id", "name"]
+        "to": {
+          "type": "number"
+        },
+        "previous_page": {
+          "type": ["null", "number"]
+        },
+        "next_page": {
+          "type": ["null", "number"]
+        },
+        "total": {
+          "type": "number"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": ["id", "name"]
+          },
+          "minItems": 0
+        }
       },
-      "minItems": 0
+      "required": ["from", "to", "previous_page", "next_page", "total", "items"]
     }
   },
   "required": ["code", "data"]

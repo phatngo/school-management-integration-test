@@ -1,8 +1,9 @@
-import { expect } from "chai";
+import chai, { expect } from "chai";
+import chaiJsonSchema from "chai-json-schema";
 import { readJSONFile } from "./files.utils";
-import { ErrorResponseBody, PactResponse } from "../types/api/common.api.types";
-
-const ERROR_RESPONSE_SCHEMA_PATH = "schemas/error.api.response.schema.json";
+import { ErrorResponseBody } from "../types/api/common.api.types";
+import { ERROR_RESPONSE_SCHEMA_PATH } from "../constants/api.constants";
+chai.use(chaiJsonSchema);
 
 export function assertErrorResponse(
   actualResponseCode: number,
@@ -12,6 +13,7 @@ export function assertErrorResponse(
   expectedErrorMessage: string,
 ) {
   expect(actualResponseCode).to.equal(expectedResponseCode);
+  assertResponseSchema(actualResponseBody, ERROR_RESPONSE_SCHEMA_PATH);
   expect(actualResponseBody.code).to.equal(expectedStatusCodeInResponseBody);
   expect(actualResponseBody.error).to.equal(expectedErrorMessage);
 }
@@ -22,6 +24,6 @@ export function assertResponseSchema<T>(
 ) {
   if (expectedResponseSchemaPath) {
     const schema = readJSONFile(expectedResponseSchemaPath);
-    // expect(actualResponseBody).to.be.jsonSchema(schema);
+    expect(actualResponseBody).to.be.jsonSchema(schema);
   }
 }

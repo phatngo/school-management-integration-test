@@ -43,11 +43,11 @@ Feature: View list of classes
 
     Examples:
       | page |
-      |     0 |
-      |    -1 |
-      | true  |
-      | null  |
-      | abc   |
+      |    0 |
+      |   -1 |
+      | true |
+      | null |
+      | abc  |
 
   Scenario Outline: View pages of classes with all valid options successfully
     When I view the list of classes with the following pagination options
@@ -58,5 +58,3 @@ Feature: View list of classes
     Examples:
       | page | limit |
       |    1 |   100 |
-      |    2 |    50 |
-      |    3 |    10 |

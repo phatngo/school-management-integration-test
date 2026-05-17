@@ -7,11 +7,6 @@ module.exports = {
       'progress-bar',
       'html:test-report.html'
     ],
-    parallel: process.env.PARALLEL || 1,
-    // formatOptions: {
-    //   html: {
-    //     externalAttachments: true,
-    //   },
-    // },
+    parallel: process.env.PARALLEL || 1
   },
 };

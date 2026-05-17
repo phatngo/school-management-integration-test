@@ -15,14 +15,17 @@ export const STUDENT_RESPONSE_SCHEMA_PATH =
 
 export const LIST_STUDENTS_RESPONSE_SCHEMA_PATH =
   "schemas/list.students.api.response.schema.json";
-  
+
+export const ERROR_RESPONSE_SCHEMA_PATH =
+  "schemas/error.api.response.schema.json";
+
 export const HTTP_STATUS = {
   CREATED: 201,
   NO_CONTENT: 204,
   OK: 200,
   NOT_FOUND: 404,
   BAD_REQUEST: 400,
-  CONFLICT: 409
+  CONFLICT: 409,
 };
 
 export const HTTP_METHOD = {
@@ -38,5 +41,5 @@ export const RESPONSE_CODE = {
   NOT_FOUND: "NOT_FOUND",
   BAD_REQUEST: "BAD_REQUEST",
   NO_CONTENT: "NO_CONTENT",
-  CONFLICT: "CONFLICT"
+  CONFLICT: "CONFLICT",
 };

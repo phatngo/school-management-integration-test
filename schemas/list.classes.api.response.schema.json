@@ -14,10 +14,10 @@
           "type": "number"
         },
         "previous_page": {
-          "type": "null"
+          "type": ["null", "number"]
         },
         "next_page": {
-          "type": "number"
+          "type": ["null", "number"]
         },
         "total": {
           "type": "number"
@@ -41,7 +41,8 @@
               }
             },
             "required": ["id", "name", "teacher_id", "class_type"]
-          }
+          },
+          "minItems": 0
         }
       },
       "required": ["from", "to", "previous_page", "next_page", "total", "items"]

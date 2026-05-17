@@ -41,7 +41,8 @@
               }
             },
             "required": ["id", "name", "phone_number", "class_id"]
-          }
+          },
+          "minItems": 0
         }
       },
       "required": ["from", "to", "previous_page", "next_page", "total", "items"]
