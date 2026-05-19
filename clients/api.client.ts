@@ -9,11 +9,11 @@ import { logApiRequestInfo } from "../utils/logger.utils";
 import { HTTP_METHOD } from "../constants/api.constants";
 
 /**
- * T = Response Body Type
- * U = Request Body Type
+ * Untyped HTTP client — accepts any payload shape and returns raw response data.
+ * Type safety is enforced at the DB layer, not here.
  */
 
-export class ApiClient<T = null> {
+export class ApiClient {
   protected baseUrl: string;
   protected endpoint: string;
   protected headers: Record<string, string> = {
@@ -47,7 +47,7 @@ export class ApiClient<T = null> {
     return s;
   }
 
-  async post(body: T): Promise<ParsedApiData<T>> {
+  async post(body: Record<string, unknown>): Promise<ParsedApiData> {
     const pactResponse: PactResponse = await this.createSpec()
       .post(`${this.baseUrl}${this.endpoint}`)
       .withBody(body);
@@ -62,7 +62,7 @@ export class ApiClient<T = null> {
     return parsedApiData;
   }
 
-  async put(id: string, body: T): Promise<ParsedApiData<T>> {
+  async put(id: string, body: Record<string, unknown>): Promise<ParsedApiData> {
     const path = this.getPathWithId(id);
     const pactResponse: PactResponse = await this.createSpec()
       .put(`${this.baseUrl}${path}`)
@@ -78,7 +78,7 @@ export class ApiClient<T = null> {
     return parsedApiData;
   }
 
-  async get(id?: string): Promise<ParsedApiData<T>> {
+  async get(id?: string): Promise<ParsedApiData> {
     const path = this.getPathWithId(id);
     const pactResponse: PactResponse = await this.createSpec().get(
       `${this.baseUrl}${path}`,
@@ -93,7 +93,7 @@ export class ApiClient<T = null> {
     return parsedApiData;
   }
 
-  async list(params?: ListOptions): Promise<ParsedApiData<T>> {
+  async list(params?: ListOptions): Promise<ParsedApiData> {
     const path = params
       ? `${this.endpoint}?${Object.entries(params)
           .map(([key, value]) => `${key}=${value}`)
@@ -112,7 +112,7 @@ export class ApiClient<T = null> {
     return parsedApiData;
   }
 
-  async delete(id?: string): Promise<ParsedApiData<T>> {
+  async delete(id?: string): Promise<ParsedApiData> {
     const path = this.getPathWithId(id);
     const pactResponse: PactResponse = await this.createSpec().delete(
       `${this.baseUrl}${path}`,
@@ -131,7 +131,7 @@ export class ApiClient<T = null> {
     return id ? `${this.endpoint}/${id}` : this.endpoint;
   }
 
-  getParsedApiData(response: PactResponse): ParsedApiData<T> {
+  getParsedApiData(response: PactResponse): ParsedApiData {
     return {
       actualResponseCode: response.statusCode,
       actualResponseHeaders: response.headers,
