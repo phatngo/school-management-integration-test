@@ -21,8 +21,9 @@ When("I delete the teacher with id: {string}", async function (id: string) {
 });
 
 Then("I see the teacher is deleted successfully", async function () {
-  const { actualResponseCode } = this.deleteTeacher;
+  const { actualResponseCode, actualResponseBody } = this.deleteTeacher;
   expect(actualResponseCode).to.equal(HTTP_STATUS.NO_CONTENT);
+  expect(actualResponseBody).to.be.empty;
 
   // Check if the teacher is actually removed from the database
   const seededTeacherId = this.seededTeacher.id;

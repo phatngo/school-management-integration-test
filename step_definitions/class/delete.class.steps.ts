@@ -19,8 +19,9 @@ When("I delete the class with id: {string}", async function (classId: string) {
 });
 
 Then("I see the class is deleted successfully", async function () {
-  const { actualResponseCode } = this.deletedClass;
+  const { actualResponseCode, actualResponseBody } = this.deletedClass;
   expect(actualResponseCode).to.equal(HTTP_STATUS.NO_CONTENT);
+  expect(actualResponseBody).to.be.empty;
 
   const classDataInDb = await this.classDb.getById(this.seededClass.id);
   expect(classDataInDb).to.be.null;

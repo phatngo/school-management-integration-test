@@ -22,8 +22,9 @@ When(
 );
 
 Then("I see the student is deleted successfully", async function () {
-  const { actualResponseCode } = this.deletedStudent;
+  const { actualResponseCode, actualResponseBody } = this.deletedStudent;
   expect(actualResponseCode).to.equal(HTTP_STATUS.NO_CONTENT);
+  expect(actualResponseBody).to.be.empty;
 
   const studentDataInDb = await this.studentDb.getById(this.seededStudent.id);
   expect(studentDataInDb).to.be.null;
